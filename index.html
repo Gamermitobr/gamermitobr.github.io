@@ -3,14 +3,7 @@
 <head>
     <title>Painel de SMM</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-        }
-        
         #form-pix {
             width: 90%;
             max-width: 400px;
@@ -21,7 +14,7 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
         
-        #form-pix input {
+        #form-pix select, #form-pix input {
             width: 100%;
             height: 40px;
             margin-bottom: 20px;
@@ -56,10 +49,15 @@
 <body>
     <h1>Painel de SMM</h1>
     <form id="form-pix">
-        <input type="text" id="nome" placeholder="Nome">
-        <input type="email" id="email" placeholder="E-mail">
-        <input type="number" id="valor" placeholder="Valor">
-        <button type="submit">Pagar com Pix</button>
+        <select id="servico">
+            <option value="seguidores-instagram">Seguidores Instagram</option>
+            <option value="curtidas-facebook">Curtidas Facebook</option>
+            <option value="comentarios-youtube">Comentários YouTube</option>
+            <option value="visualizacoes-tiktok">Visualizações TikTok</option>
+        </select>
+        <input type="number" id="quantidade" placeholder="Quantidade">
+        <input type="url" id="url-pagina" placeholder="URL da Página">
+        <button type="submit">Comprar</button>
     </form>
     <script src="script.js"></script>
 </body>
