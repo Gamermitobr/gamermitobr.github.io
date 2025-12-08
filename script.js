@@ -1,4 +1,4 @@
-const apiKey = 'SUA_CHAVE_DE_API';
+const apiKey = 'AIzaSyD76062dyWycPGBt2zWqOV17kHdx4q9ARM';
 const videoId = 'VIDEO_ID';
 const url = `https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${videoId}&key=${apiKey}`;
 
