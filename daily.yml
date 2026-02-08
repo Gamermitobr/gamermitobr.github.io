@@ -1,0 +1,27 @@
+name: Ofertas Shopee Diárias
+
+on:
+  schedule:
+    - cron: "0 9 * * *" # todo dia 9h
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - run: node generate.js
+
+      - name: Commit automático
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "actions@github.com"
+          git add .
+          git commit -m "Atualiza ofertas Shopee"
+          git push
