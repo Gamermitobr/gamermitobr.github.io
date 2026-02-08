@@ -1,28 +1,18 @@
 const fs = require("fs");
 
-const AFILIADO = "https://collshp.com/l6ucuzrolo235?view=storefront";
+const products = JSON.parse(
+  fs.readFileSync("affiliate_links.json", "utf-8")
+);
 
-const products = [
-  {
-    title: "Fone Bluetooth TWS",
-    price: "89,90",
-    old_price: "159,90",
-    image: "https://via.placeholder.com/300",
-    link: `https://shopee.com.br/${AFILIADO}`
-  },
-  {
-    title: "Smartwatch Esportivo",
-    price: "129,90",
-    old_price: "219,90",
-    image: "https://via.placeholder.com/300",
-    link: `https://shopee.com.br/${AFILIADO}`
-  }
-];
+// embaralha produtos
+const shuffled = products.sort(() => 0.5 - Math.random());
 
-const data = {
-  updated_at: new Date().toISOString(),
-  products
-};
+// pega 5 ofertas do dia
+const daily = shuffled.slice(0, 5);
 
-fs.writeFileSync("products.json", JSON.stringify(data, null, 2));
-console.log("products.json atualizado");
+fs.writeFileSync(
+  "public/products.json",
+  JSON.stringify(daily, null, 2)
+);
+
+console.log("Ofertas do dia geradas com links afiliados");
