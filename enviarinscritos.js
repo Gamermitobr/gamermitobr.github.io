@@ -1,8 +1,8 @@
 const axios = require('axios');
 
 // Configurações da API do YouTube
-const apiKey = 'SUA_API_KEY';
-const canalId = 'SEU_CANAL_ID';
+const apiKey = '@robinairdraktutoriais';
+const canalId = 'AIzaSyCntGVfqhqltBi-uqpiS0CSbmaevAPvpMg';
 
 // Configurações da base de dados
 const db = [
