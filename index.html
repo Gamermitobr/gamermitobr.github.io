@@ -1,152 +1,17 @@
 <!DOCTYPE html>
 <html>
 <head>
- <title>Capturar Inscritos</title>
- <style>
- body {
- font-family: Arial, sans-serif;
- }
- </style>
+  <title>YouTube API</title>
 </head>
 <body>
- <h1>Capturar Inscritos</h1>
- <p>Insira o ID do canal do YouTube:</p>
- <input type="text" id="@robinairdraktutoriais" placeholder="ID do canal">
- <button id="capturar-btn">Capturar Inscritos</button>
- <div id="resultado"></div>
+  <script>
+    const apiKey = 'AIzaSyCntGVfqhqltBi-uqpiS0CSbmaevAPvpMg';
+    const canalId = '@robinairdraktutoriais';
 
- <script>
- const apiKey = 'AIzaSyCntGVfqhqltBi-uqpiS0CSbmaevAPvpMg';
- const canalIdInput = document.getElementById('canal-id');
- const capturarBtn = document.getElementById('capturar-btn');
- const resultadoDiv = document.getElementById('resultado');
-
- capturarBtn.addEventListener('click', () => {
- const canalId = canalIdInput.value;
- if (canalId) {
- capturarInscritos(canalId);
- } else {
- resultadoDiv.innerHTML = 'Por favor, insira o ID do canal.';
- }
- });
-
- function capturarInscritos(canalId) {
- fetch(`https:                                                                                                             
- .then(response => response.json())
- .then(data => {
- const inscritos = data.items;
- if (inscritos.length > 0) {
- resultadoDiv.innerHTML = 'Inscritos capturados:';
- inscritos.forEach(inscrito => {
- resultadoDiv.innerHTML += `<p>${inscrito.snippet.resourceId.channelId}</p>`;
- });
-                                       
- enviarInscritos(inscritos);
- } else {
- resultadoDiv.innerHTML = 'Nenhum inscrito encontrado.';
- }
- })
- .catch(error => {
- resultadoDiv.innerHTML = 'Erro ao capturar inscritos.';
- console.error(error);
- });
- }
-
- function enviarInscritos(inscritos) {
-                                                                  
- const meuCanalId = 'SEU_CANAL_ID';
- inscritos.forEach(inscrito => {
- fetch(`https://www.googleapis.com/youtube/v3/subscriptions?part=snippet&key=${apiKey}`, {
- method: 'POST',
- headers: {
- 'Content-Type': 'application/json'
- },
- body: JSON.stringify({
- snippet: {
- resourceId: {
- channelId: inscrito.snippet.resourceId.channelId
- }
- }
- })
- })
- .then(response => response.json())
- .then(data => {
- console.log(`Inscrito enviado para o canal ${meuCanalId}`);
- })
- .catch(error => {
- console.error(error);
- });
- });
- }
- </script>
-
- <script>
- // Script para capturar inscritos de outros canais
- const outrosCanais = [
- { id: 'OUTRO_CANAL_ID_1' },
- { id: 'OUTRO_CANAL_ID_2' },
- // Adicione mais canais aqui
- ];
-
- outrosCanais.forEach(canal => {
- fetch(`https:                                                                                                              
- .then(response => response.json())
- .then(data => {
- const inscritos = data.items;
- inscritos.forEach(inscrito => {
- console.log(`Inscrito capturado de ${canal.id}: ${inscrito.snippet.resourceId.channelId}`);
-                                     
- enviarInscritos([inscrito]);
- });
- })
- .catch(error => {
- console.error(error);
- });
- });
- </script>
-
- <script>
-                                                   
- const canaisParaEnviar = [
- { id: 'OUTRO_CANAL_ID_1' },
- { id: 'OUTRO_CANAL_ID_2' },
-                             
- ];
-
- canaisParaEnviar.forEach(canal => {
- fetch(`https://www.googleapis.com/youtube/v3/subscriptions?part=snippet&channelId=${canal.id}&maxResults=50&key=${apiKey}`)
- .then(response => response.json())
- .then(data => {
- const inscritos = data.items;
- inscritos.forEach(inscrito => {
- console.log(`Inscrito enviado para ${canal.id}: ${inscrito.snippet.resourceId.channelId}`);
- // Envie o inscrito para o canal
- fetch(`https:                                                                            
- method: 'POST',
- headers: {
- 'Content-Type': 'application/json'
- },
- body: JSON.stringify({
- snippet: {
- resourceId: {
- channelId: inscrito.snippet.resourceId.channelId
- }
- }
- })
- })
- .then(response => response.json())
- .then(data => {
- console.log(`Inscrito enviado para ${canal.id}`);
- })
- .catch(error => {
- console.error(error);
- });
- });
- })
- .catch(error => {
- console.error(error);
- });
- });
- </script>
+    fetch(`https://www.googleapis.com/youtube/v3/channels?part=snippet&id=${canalId}&key=${apiKey}`)
+      .then(response => response.json())
+      .then(data => console.log(data))
+      .catch(error => console.error(error));
+  </script>
 </body>
 </html>
