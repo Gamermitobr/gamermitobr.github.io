@@ -1,53 +1,152 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>Ofertas do Dia</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <link rel="stylesheet" href="style.css">
+ <title>Capturar Inscritos</title>
+ <style>
+ body {
+ font-family: Arial, sans-serif;
+ }
+ </style>
 </head>
 <body>
+ <h1>Capturar Inscritos</h1>
+ <p>Insira o ID do canal do YouTube:</p>
+ <input type="text" id="canal-id" placeholder="ID do canal">
+ <button id="capturar-btn">Capturar Inscritos</button>
+ <div id="resultado"></div>
 
-<header>
-  🔥 Ofertas do Dia
-</header>
+ <script>
+ const apiKey = 'SUA_API_KEY';
+ const canalIdInput = document.getElementById('canal-id');
+ const capturarBtn = document.getElementById('capturar-btn');
+ const resultadoDiv = document.getElementById('resultado');
 
-<div class="container" id="products">
-  Carregando ofertas...
-</div>
+ capturarBtn.addEventListener('click', () => {
+ const canalId = canalIdInput.value;
+ if (canalId) {
+ capturarInscritos(canalId);
+ } else {
+ resultadoDiv.innerHTML = 'Por favor, insira o ID do canal.';
+ }
+ });
 
-<footer>
-  Alguns links podem gerar comissão (afiliado)
-</footer>
+ function capturarInscritos(canalId) {
+ fetch(`https:                                                                                                             
+ .then(response => response.json())
+ .then(data => {
+ const inscritos = data.items;
+ if (inscritos.length > 0) {
+ resultadoDiv.innerHTML = 'Inscritos capturados:';
+ inscritos.forEach(inscrito => {
+ resultadoDiv.innerHTML += `<p>${inscrito.snippet.resourceId.channelId}</p>`;
+ });
+                                       
+ enviarInscritos(inscritos);
+ } else {
+ resultadoDiv.innerHTML = 'Nenhum inscrito encontrado.';
+ }
+ })
+ .catch(error => {
+ resultadoDiv.innerHTML = 'Erro ao capturar inscritos.';
+ console.error(error);
+ });
+ }
 
-<script>
-fetch("products.json")
-  .then(response => response.json())
-  .then(data => {
-    const container = document.getElementById("products");
-    container.innerHTML = "";
+ function enviarInscritos(inscritos) {
+                                                                  
+ const meuCanalId = 'SEU_CANAL_ID';
+ inscritos.forEach(inscrito => {
+ fetch(`https://www.googleapis.com/youtube/v3/subscriptions?part=snippet&key=${apiKey}`, {
+ method: 'POST',
+ headers: {
+ 'Content-Type': 'application/json'
+ },
+ body: JSON.stringify({
+ snippet: {
+ resourceId: {
+ channelId: inscrito.snippet.resourceId.channelId
+ }
+ }
+ })
+ })
+ .then(response => response.json())
+ .then(data => {
+ console.log(`Inscrito enviado para o canal ${meuCanalId}`);
+ })
+ .catch(error => {
+ console.error(error);
+ });
+ });
+ }
+ </script>
 
-    data.products.forEach(p => {
-      const card = document.createElement("div");
-      card.className = "card";
+ <script>
+ // Script para capturar inscritos de outros canais
+ const outrosCanais = [
+ { id: 'OUTRO_CANAL_ID_1' },
+ { id: 'OUTRO_CANAL_ID_2' },
+ // Adicione mais canais aqui
+ ];
 
-      card.innerHTML = `
-        <img src="${p.image}">
-        <h3>${p.title}</h3>
-        <p class="old">R$ ${p.old_price}</p>
-        <p class="price">R$ ${p.price}</p>
-        <a href="${p.link}" target="_blank">Comprar</a>
-      `;
+ outrosCanais.forEach(canal => {
+ fetch(`https:                                                                                                              
+ .then(response => response.json())
+ .then(data => {
+ const inscritos = data.items;
+ inscritos.forEach(inscrito => {
+ console.log(`Inscrito capturado de ${canal.id}: ${inscrito.snippet.resourceId.channelId}`);
+                                     
+ enviarInscritos([inscrito]);
+ });
+ })
+ .catch(error => {
+ console.error(error);
+ });
+ });
+ </script>
 
-      container.appendChild(card);
-    });
-  })
-  .catch(() => {
-    document.getElementById("products").innerHTML =
-      "Erro ao carregar ofertas";
-  });
-</script>
+ <script>
+                                                   
+ const canaisParaEnviar = [
+ { id: 'OUTRO_CANAL_ID_1' },
+ { id: 'OUTRO_CANAL_ID_2' },
+                             
+ ];
 
+ canaisParaEnviar.forEach(canal => {
+ fetch(`https://www.googleapis.com/youtube/v3/subscriptions?part=snippet&channelId=${canal.id}&maxResults=50&key=${apiKey}`)
+ .then(response => response.json())
+ .then(data => {
+ const inscritos = data.items;
+ inscritos.forEach(inscrito => {
+ console.log(`Inscrito enviado para ${canal.id}: ${inscrito.snippet.resourceId.channelId}`);
+ // Envie o inscrito para o canal
+ fetch(`https:                                                                            
+ method: 'POST',
+ headers: {
+ 'Content-Type': 'application/json'
+ },
+ body: JSON.stringify({
+ snippet: {
+ resourceId: {
+ channelId: inscrito.snippet.resourceId.channelId
+ }
+ }
+ })
+ })
+ .then(response => response.json())
+ .then(data => {
+ console.log(`Inscrito enviado para ${canal.id}`);
+ })
+ .catch(error => {
+ console.error(error);
+ });
+ });
+ })
+ .catch(error => {
+ console.error(error);
+ });
+ });
+ </script>
 </body>
 </html>
