@@ -4,14 +4,50 @@
   <title>YouTube API</title>
 </head>
 <body>
+  <button id="transferir-inscritos">Transferir Inscritos</button>
   <script>
     const apiKey = 'AIzaSyCntGVfqhqltBi-uqpiS0CSbmaevAPvpMg';
-    const canalId = '@robinairdraktutoriais';
+    const canalOrigemId = '@robinairdraktutoriais';
+    const canalDestinoId = '@jpfilmes-x4h';
 
-    fetch(`https://www.googleapis.com/youtube/v3/channels?part=snippet&id=${canalId}&key=${apiKey}`)
-      .then(response => response.json())
-      .then(data => console.log(data))
-      .catch(error => console.error(error));
+    document.getElementById('transferir-inscritos').addEventListener('click', () => {
+      // Listar inscritos do canal de origem
+      fetch(`https:                                                                                                                   
+        .then(response => response.json())
+        .then(data => {
+          const inscritosOrigem = data.items.map(item => item.snippet.resourceId.channelId);
+                                                 
+          fetch(`https://www.googleapis.com/youtube/v3/subscriptions?part=snippet&channelId=${canalDestinoId}&key=${apiKey}&maxResults=50`)
+            .then(response => response.json())
+            .then(data => {
+              const inscritosDestino = data.items.map(item => item.snippet.resourceId.channelId);
+              // Identificar inscritos que estão no canal de origem, mas não no canal de destino
+              const inscritosParaInscrever = inscritosOrigem.filter(id => !inscritosDestino.includes(id));
+              // Inscrever esses usuários no canal de destino
+              inscritosParaInscrever.forEach(id => {
+                fetch(`https://www.googleapis.com/youtube/v3/subscriptions?part=snippet&key=${apiKey}`, {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json'
+                  },
+                  body: JSON.stringify({
+                    snippet: {
+                      resourceId: {
+                        kind: 'youtube#channel',
+                        channelId: id
+                      }
+                    }
+                  })
+                })
+                .then(response => response.json())
+                .then(data => console.log(data))
+                .catch(error => console.error(error));
+              });
+            })
+            .catch(error => console.error(error));
+        })
+        .catch(error => console.error(error));
+    });
   </script>
 </body>
 </html>
