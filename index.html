@@ -1,12 +1,24 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>YouTube API</title>
+  <title>Lista de Inscritos</title>
 </head>
 <body>
-  <button id="transferir-inscritos">Transferir Inscritos</button>
-  <div id="status"></div>
+  <h1>Lista de Inscritos</h1>
+  <ul id="inscritos"></ul>
 
-  <script src="script.js"></script>
+  <script>
+    fetch('inscritos.txt')
+      .then(response => response.text())
+      .then(data => {
+        const inscritos = data.split('\n');
+        const ul = document.getElementById('inscritos');
+        inscritos.forEach(inscrito => {
+          const li = document.createElement('li');
+          li.textContent = inscrito;
+          ul.appendChild(li);
+        });
+      });
+  </script>
 </body>
 </html>
