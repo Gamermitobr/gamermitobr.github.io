@@ -1,0 +1,24 @@
+name: Atualizar site
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  atualizar-site:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v2
+      - name: Instalar dependências
+        run: |
+          pip install selenium
+          pip install webdriver-manager
+      - name: Executar script
+        run: |
+          python script.py
+      - name: Atualizar site
+        uses: actions/upload-pages@v1
+        with:
+          path: .
