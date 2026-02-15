@@ -1,0 +1,3 @@
+with open('inscritos.txt', 'w') as f:
+    for inscrito in inscritos:
+        f.write(inscrito + '\n')
