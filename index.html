@@ -14,9 +14,11 @@
         const inscritos = data.split('\n');
         const ul = document.getElementById('inscritos');
         inscritos.forEach(inscrito => {
-          const li = document.createElement('li');
-          li.textContent = inscrito;
-          ul.appendChild(li);
+          if (inscrito !== '') {
+            const li = document.createElement('li');
+            li.textContent = inscrito;
+            ul.appendChild(li);
+          }
         });
       });
   </script>
