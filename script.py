@@ -8,7 +8,7 @@ import time
 driver = webdriver.Chrome()
 
 # Acessa a página do canal do YouTube
-url = "https://www.youtube.com/channel/ID_DO_CANAL"
+url = "https://youtube.com/@davizinmakerkkj?si=OQqb7ZDZjnjFp5di"
 driver.get(url)
 
 # Espera até que a página seja carregada
