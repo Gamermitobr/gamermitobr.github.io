@@ -1,47 +1,19 @@
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-import time
+import requests
 
-# Configura o Selenium
-driver = webdriver.Chrome()
-
-# Acessa a página do canal do YouTube
+# URL do canal do YouTube
 url = "https://youtube.com/@davizinmakerkkj?si=OQqb7ZDZjnjFp5di"
-driver.get(url)
 
-# Espera até que a página seja carregada
-time.sleep(5)
+# Faz uma requisição para o canal do YouTube
+response = requests.get(url)
 
-# Rola a página para baixo para carregar mais inscritos
-for i in range(10):
-    driver.execute_script("window.scrollTo(0, document.documentElement.scrollHeight);")
-    time.sleep(2)
+# Verifica se a requisição foi bem-sucedida
+if response.status_code == 200:
+    # Extrai a lista de inscritos
+    inscritos = ["Inscrito 1", "Inscrito 2", "Inscrito 3"]  # Substitua com a lista de inscritos real
 
-# Extrai a lista de inscritos
-inscritos = driver.find_elements(By.CSS_SELECTOR, "                      
-
-                               
-lista_inscritos = []
-for inscrito in inscritos:
-    try:
-        nome = inscrito.find_element(By.CSS_SELECTOR, "#channel-subscribers")
-
-# Processa a lista de inscritos
-lista_inscritos = []
-for inscrito in inscritos:
-    try:
-        nome = inscrito.find_element(By.CSS_SELECTOR, "a").text
-        lista_inscritos.append(nome)
-    except:
-        pass
-
-                                          
-with open("# Salva a lista de inscritos em um arquivo
-with open("lista_inscritos.txt", "w") as f:
-    for inscrito in lista_inscritos:
-        f.write(inscrito + "\n")
-
-# Fecha o Selenium
-driver.quit()
+    # Gera o arquivo inscritos.txt
+    with open('inscritos.txt', 'w') as f:
+        for inscrito in inscritos:
+            f.write(inscrito + '\n')
+else:
+    print("Erro ao acessar o canal do YouTube")
