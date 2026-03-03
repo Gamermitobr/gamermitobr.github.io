@@ -1,6 +1,7 @@
 document.getElementById('form').addEventListener('submit', async (e) => {
   e.preventDefault();
   const link = document.getElementById('link').value;
+  console.log('🔍 Chamando API com link:', link);
   try {
     const res = await fetch('/.netlify/functions/api.js', {
       method: 'POST',
@@ -11,16 +12,17 @@ document.getElementById('form').addEventListener('submit', async (e) => {
     });
     if (!res.ok) throw new Error('Erro no server');
     const data = await res.json();
+    console.log('✅ Resposta da API:', data);
     data.cuts.forEach((cut) => {
       const a = document.createElement('a');
-      a.href = cut; // supondo que 'cut' é a URL completa
-      a.download = cut.split('/').pop(); // pega só o nome do arquivo
+      a.href = cut;
+      a.download = cut.split('/').pop();
       a.textContent = `Baixar ${cut.split('/').pop()}`;
       document.body.appendChild(a);
-      a.click(); // já aciona o download
+      a.click();
     });
   } catch (err) {
-    console.error(err);
+    console.error('❌ Erro:', err);
     alert('Erro ao gerar highlights 😢');
   }
 });
