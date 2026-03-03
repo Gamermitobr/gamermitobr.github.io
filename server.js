@@ -10,58 +10,10 @@ app.use(express.static('.'));
 
 app.post('/highlight', async (req, res) => {
   const { link } = req.body;
+  console.log('🔍 Link recebido:', link);
   const videoPath = `video-${Date.now()}.mp4`;
 
   try {
-    await new Promise((resolve, reject) => {
-      ytdl(link)
-        .pipe(fs.createWriteStream(videoPath))
-        .on('finish', resolve)
-        .on('error', reject);
-    });
-
-    // Mock highlights (precisa de lógica real)
-    const highlights = [
-      { start: 10, end: 30 },
-      { start: 60, end: 90 },
-    ];
-    res.json({ highlights });
-  } catch (err) {
-    res.status(500).send('Erro');
-  }
-});
-
-app.post('/cut', async (req, res) => {
-  const { link, start, end } = req.body;
-  const videoPath = `video-${Date.now()}.mp4`;
-  const outputPath = `corte-${Date.now()}.mp4`;
-
-  try {
-    await new Promise((resolve, reject) => {
-      ytdl(link)
-        .pipe(fs.createWriteStream(videoPath))
-        .on('finish', resolve)
-        .on('error', reject);
-    });
-
-    await new Promise((resolve, reject) => {
-      ffmpeg(videoPath)
-        .setStartTime(start)
-        .setDuration(end - start)
-        .output(outputPath)
-        .on('end', resolve)
-        .on('error', reject)
-        .run();
-    });
-
-    res.download(outputPath, (err) => {
-      if (err) console.error(err);
-      fs.unlinkSync(videoPath);
-      fs.unlinkSync(outputPath);
-    });
-  } catch (err) {
-    res.status(500).send('Erro');
-  }
-});
-
-app.listen(3000, () => console.log('Server em http://localhost:3000'));
+    if (!ytdl.validateURL(link)) {
+      console.error('❌ Link inválido');
+      return res
