@@ -1,15 +1,12 @@
-const fetch = require('node-fetch');
-
 exports.handler = async (event) => {
-  console.log('🚀 Função API.js chamada!');
+  console.log('🚀 API chamada!');
   console.log('🔍 Event recebido:', event);
 
   try {
     const { link } = JSON.parse(event.body);
     console.log('🔗 Link recebido:', link);
 
-    // Exemplo de processamento (ajuste conforme sua lógica)
-    const videoId = link.split('v=')[1];
+    // Exemplo de resposta (ajuste conforme sua lógica)
     const cuts = [
       `https:                        
       `https://example.com/cut2.mp4`,
