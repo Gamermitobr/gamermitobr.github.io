@@ -9,15 +9,16 @@
   <h1>Corte vídeos do YouTube!</h1>
   <form id="uploadForm">
     <input type="text" id="videoLink" placeholder="Link do YouTube">
-    <video id="videoPreview" controls></video>
     <div>
       <label>Início (s):</label>
       <input type="number" id="startTime" step="1">
       <label>Fim (s):</label>
       <input type="number" id="endTime" step="1">
     </div>
-    <button type="submit">Cortar e baixar</button>
+    <button type="submit">Gerar cortes</button>
   </form>
+
+  <div id="cortes"></div>
 
   <script src="script.js"></script>
 </body>
