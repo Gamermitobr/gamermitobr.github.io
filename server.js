@@ -14,7 +14,6 @@ app.post('/cut', async (req, res) => {
   const outputPath = `corte-${Date.now()}.mp4`;
 
   try {
-    // Baixa vídeo
     await new Promise((resolve, reject) => {
       ytdl(link)
         .pipe(fs.createWriteStream(videoPath))
@@ -22,7 +21,6 @@ app.post('/cut', async (req, res) => {
         .on('error', reject);
     });
 
-    // Corta vídeo
     await new Promise((resolve, reject) => {
       ffmpeg(videoPath)
         .setStartTime(start)
@@ -33,14 +31,10 @@ app.post('/cut', async (req, res) => {
         .run();
     });
 
-    res.download(outputPath, (err) => {
-      if (err) console.error(err);
-      fs.unlinkSync(videoPath);
-      fs.unlinkSync(outputPath);
-    });
+    res.json({ url: `/${outputPath}` });
   } catch (err) {
     console.error(err);
-    res.status(500).send('Erro no processamento');
+    res.status(500).send('Erro');
   }
 });
 
