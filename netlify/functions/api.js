@@ -1,39 +1,29 @@
-const { exec } = require('child_process');
-const fs = require('fs');
-const path = require('path');
+const fetch = require('node-fetch');
 
-exports.handler = async (event, context) => {
-  const { url, start, end } = JSON.parse(event.body);
-
-  // Gera o nome do arquivo
-  const filename = `clip-${Date.now()}.mp4`;
-  const command = `yt-dlp --download ${url} --output ${filename} --start ${start} --end ${end}`;
+exports.handler = async (event) => {
+  console.log('🚀 Função API.js chamada!');
+  console.log('🔍 Event recebido:', event);
 
   try {
-    await new Promise((resolve, reject) => {
-      exec(command, (err, stdout) => {
-        if (err) reject(err);
-        else resolve(stdout);
-      });
-    });
+    const { link } = JSON.parse(event.body);
+    console.log('🔗 Link recebido:', link);
 
-    // Lê o arquivo gerado
-    const filePath = path.join('/tmp', filename);
-    const file = fs.readFileSync(filePath);
+    // Exemplo de processamento (ajuste conforme sua lógica)
+    const videoId = link.split('v=')[1];
+    const cuts = [
+      `https:                        
+      `https://example.com/cut2.mp4`,
+    ];
 
     return {
       statusCode: 200,
-      headers: {
-        'Content-Type': 'video/mp4',
-        'Content-Disposition': `attachment; filename="${filename}"`,
-      },
-      body: file.toString('base64'),
-      isBase64Encoded: true,
+      body: JSON.stringify({ cuts }),
     };
   } catch (err) {
+    console.error('❌ Erro:', err);
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: err.message }),
+      body: JSON.stringify({ error: 'Erro interno' }),
     };
   }
 };
