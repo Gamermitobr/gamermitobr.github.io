@@ -9,20 +9,31 @@ document.getElementById('form').addEventListener('submit', async (e) => {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({ link }),
+    })
+    .then(res => {
+      console.log('✅ Resposta do fetch:', res);
+      return res.json();
+    })
+    .catch(err => {
+      console.error('❌ Erro no fetch:', err);
+      alert('Erro ao conectar com a API 😢');
     });
-    if (!res.ok) throw new Error('Erro no server');
-    const data = await res.json();
-    console.log('✅ Resposta da API:', data);
-    data.cuts.forEach((cut) => {
-      const a = document.createElement('a');
-      a.href = cut;
-      a.download = cut.split('/').pop();
-      a.textContent = `Baixar ${cut.split('/').pop()}`;
-      document.body.appendChild(a);
-      a.click();
-    });
+
+    console.log('✅ Resposta da API:', res);
+    if (res && res.cuts) {
+      res.cuts.forEach((cut) => {
+        const a = document.createElement('a');
+        a.href = cut;
+        a.download = cut.split('/').pop();
+        a.textContent = `Baixar ${cut.split('/').pop()}`;
+        document.body.appendChild(a);
+        a.click();
+      });
+    } else {
+      alert('Nenhum clipe gerado 😕');
+    }
   } catch (err) {
-    console.error('❌ Erro:', err);
+    console.error('❌ Erro geral:', err);
     alert('Erro ao gerar highlights 😢');
   }
 });
