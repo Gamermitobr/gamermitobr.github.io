@@ -2,16 +2,17 @@ const express = require('express');
 const ffmpeg = require('fluent-ffmpeg');
 const fs = require('fs');
 const ytdl = require('ytdl-core');
+const path = require('path');
 
 const app = express();
 app.use(express.json());
+app.use(express.static('.'));
 
 app.post('/highlight', async (req, res) => {
   const { link } = req.body;
   const videoPath = `video-${Date.now()}.mp4`;
 
   try {
-    // Baixa vídeo
     await new Promise((resolve, reject) => {
       ytdl(link)
         .pipe(fs.createWriteStream(videoPath))
@@ -19,14 +20,44 @@ app.post('/highlight', async (req, res) => {
         .on('error', reject);
     });
 
-    // Detecta highlights (ex: picos de áudio)
-    ffmpeg.ffprobe(videoPath, (err, metadata) => {
-      const highlights = [];
-      // Exemplo simples: detectar picos (precisa de lib melhor)
-      highlights.push({ start: 10, end: 30 }); // mock highlight
-      highlights.push({ start: 60, end: 90 });
+    // Mock highlights (precisa de lógica real)
+    const highlights = [
+      { start: 10, end: 30 },
+      { start: 60, end: 90 },
+    ];
+    res.json({ highlights });
+  } catch (err) {
+    res.status(500).send('Erro');
+  }
+});
 
-      res.json({ highlights });
+app.post('/cut', async (req, res) => {
+  const { link, start, end } = req.body;
+  const videoPath = `video-${Date.now()}.mp4`;
+  const outputPath = `corte-${Date.now()}.mp4`;
+
+  try {
+    await new Promise((resolve, reject) => {
+      ytdl(link)
+        .pipe(fs.createWriteStream(videoPath))
+        .on('finish', resolve)
+        .on('error', reject);
+    });
+
+    await new Promise((resolve, reject) => {
+      ffmpeg(videoPath)
+        .setStartTime(start)
+        .setDuration(end - start)
+        .output(outputPath)
+        .on('end', resolve)
+        .on('error', reject)
+        .run();
+    });
+
+    res.download(outputPath, (err) => {
+      if (err) console.error(err);
+      fs.unlinkSync(videoPath);
+      fs.unlinkSync(outputPath);
     });
   } catch (err) {
     res.status(500).send('Erro');
