@@ -2,7 +2,7 @@ document.getElementById('form').addEventListener('submit', async (e) => {
   e.preventDefault();
   const link = document.getElementById('link').value;
   try {
-    const res = await fetch('/.netlify/functions/API', {
+    const res = await fetch('/.netfly/functions/api.js', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
