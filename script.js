@@ -1,9 +1,10 @@
 document.getElementById('form').addEventListener('submit', async (e) => {
   e.preventDefault();
+  alert('🔍 Form enviado!');
   const link = document.getElementById('link').value;
   console.log('🔍 Chamando API com link:', link);
   try {
-    const res = await fetch('/api', {
+    const res = await fetch('/.netlify/functions/api', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
