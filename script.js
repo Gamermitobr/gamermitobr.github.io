@@ -1,4 +1,5 @@
 const form = document.getElementById('uploadForm');
+const cortesDiv = document.getElementById('cortes');
 
 form.addEventListener('submit', async (e) => {
   e.preventDefault();
@@ -12,10 +13,9 @@ form.addEventListener('submit', async (e) => {
     body: JSON.stringify({ link, start, end }),
   });
 
-  const blob = await response.blob();
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = 'corte.mp4';
-  a.click();
+  const data = await response.json();
+  cortesDiv.innerHTML = `
+    <video controls src="${data.url}" width="300"></video>
+    <a href="${data.url}" download="corte.mp4">Baixar corte</a>
+  `;
 });
