@@ -3,25 +3,18 @@ document.getElementById('form').addEventListener('submit', async (e) => {
   const link = document.getElementById('link').value;
   console.log('🔍 Chamando API com link:', link);
   try {
-    const res = await fetch('/.netlify/functions/api.js', {
+    const res = await fetch('/api', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({ link }),
-    })
-    .then(res => {
-      console.log('✅ Resposta do fetch:', res);
-      return res.json();
-    })
-    .catch(err => {
-      console.error('❌ Erro no fetch:', err);
-      alert('Erro ao conectar com a API 😢');
     });
-
-    console.log('✅ Resposta da API:', res);
-    if (res && res.cuts) {
-      res.cuts.forEach((cut) => {
+    if (!res.ok) throw new Error('Erro no server');
+    const data = await res.json();
+    console.log('✅ Resposta da API:', data);
+    if (data.cuts && data.cuts.length > 0) {
+      data.cuts.forEach((cut) => {
         const a = document.createElement('a');
         a.href = cut;
         a.download = cut.split('/').pop();
@@ -33,7 +26,7 @@ document.getElementById('form').addEventListener('submit', async (e) => {
       alert('Nenhum clipe gerado 😕');
     }
   } catch (err) {
-    console.error('❌ Erro geral:', err);
+    console.error('❌ Erro:', err);
     alert('Erro ao gerar highlights 😢');
   }
 });
