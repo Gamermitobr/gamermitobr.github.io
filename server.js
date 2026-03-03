@@ -1,7 +1,7 @@
 const express = require('express');
 const ffmpeg = require('fluent-ffmpeg');
 const fs = require('fs');
-const ytdl = require('ytdl-core');
+const { exec } = require('yt-dlp-exec');
 const path = require('path');
 
 const app = express();
@@ -14,6 +14,13 @@ app.post('/highlight', async (req, res) => {
   const videoPath = `video-${Date.now()}.mp4`;
 
   try {
-    if (!ytdl.validateURL(link)) {
-      console.error('❌ Link inválido');
-      return res
+    await exec(link, {
+      output: videoPath,
+      format: 'mp4',
+    });
+    console.log('✅ Vídeo baixado');
+
+    // Mock highlights (precisa de lógica real)
+    const highlights = [
+      { start: 10, end: 30 },
+      { start: 60
