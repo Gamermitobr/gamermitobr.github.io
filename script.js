@@ -1,21 +1,32 @@
-const form = document.getElementById('uploadForm');
-const cortesDiv = document.getElementById('cortes');
-
-form.addEventListener('submit', async (e) => {
+document.getElementById('form').addEventListener('submit', async (e) => {
   e.preventDefault();
-  const link = document.getElementById('videoLink').value;
-  const start = document.getElementById('startTime').value;
-  const end = document.getElementById('endTime').value;
+  const link = document.getElementById('link').value;
+  const res = await fetch('/highlight', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ link }),
+  });
+  const data = await res.json();
+  document.getElementById('highlights').innerHTML = data.highlights
+    .map(h => `
+      <p>${h.start}s - ${h.end}s 
+        <button onclick="baixarCorte(${h.start}, ${h.end})">Baixar</button>
+      </p>
+    `)
+    .join('');
+});
 
-  const response = await fetch('/cut', {
+async function baixarCorte(start, end) {
+  const link = document.getElementById('link').value;
+  const res = await fetch('/cut', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ link, start, end }),
   });
-
-  const data = await response.json();
-  cortesDiv.innerHTML = `
-    <video controls src="${data.url}" width="300"></video>
-    <a href="${data.url}" download="corte.mp4">Baixar corte</a>
-  `;
-});
+  const blob = await res.blob();
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `corte-${start}-${end}.mp4`;
+  a.click();
+}
