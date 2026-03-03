@@ -1,26 +1,24 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-BR">
 <head>
-  <title>Lista de Inscritos</title>
+  <meta charset="UTF-8">
+  <title>ClipLive</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <h1>Lista de Inscritos</h1>
-  <ul id="inscritos"></ul>
+  <h1>Corte vídeos de live!</h1>
+  <form id="uploadForm">
+    <input type="file" accept="video/*" id="videoUpload">
+    <video id="videoPreview" controls></video>
+    <div>
+      <label>Início:</label>
+      <input type="number" id="startTime" step="1">
+      <label>Fim:</label>
+      <input type="number" id="endTime" step="1">
+    </div>
+    <button type="submit">Cortar e baixar</button>
+  </form>
 
-  <script>
-    fetch('inscritos.txt')
-      .then(response => response.text())
-      .then(data => {
-        const inscritos = data.split('\n');
-        const ul = document.getElementById('inscritos');
-        inscritos.forEach(inscrito => {
-          if (inscrito !== '') {
-            const li = document.createElement('li');
-            li.textContent = inscrito;
-            ul.appendChild(li);
-          }
-        });
-      });
-  </script>
+  <script src="script.js"></script>
 </body>
 </html>
