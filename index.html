@@ -6,77 +6,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<title>Loja Free Fire</title>
+<title>FF Gamer Store</title>
 
+<link rel="stylesheet" href="style.css">
 <link rel="manifest" href="manifest.json">
-
-<style>
-
-body{
-margin:0;
-font-family:Arial;
-background:#0f0f0f;
-color:white;
-}
-
-header{
-background:linear-gradient(90deg,#ff004c,#7a00ff);
-padding:15px;
-display:flex;
-justify-content:space-between;
-}
-
-#produtos{
-display:grid;
-grid-template-columns:repeat(2,1fr);
-gap:10px;
-padding:10px;
-}
-
-.card{
-background:#1a1a1a;
-padding:10px;
-border-radius:10px;
-text-align:center;
-}
-
-button{
-background:#ff004c;
-border:none;
-padding:10px;
-border-radius:8px;
-color:white;
-margin-top:5px;
-}
-
-#adminBtn{
-position:fixed;
-top:5px;
-right:5px;
-opacity:0;
-}
-
-#pixBox{
-position:fixed;
-bottom:0;
-left:0;
-right:0;
-background:#111;
-padding:20px;
-display:none;
-}
-
-#pixQR{
-width:200px;
-}
-
-.install{
-position:fixed;
-bottom:10px;
-right:10px;
-}
-
-</style>
 
 </head>
 
@@ -84,157 +17,35 @@ right:10px;
 
 <header>
 
-<h2>🔥 Loja Free Fire</h2>
+<h1>🔥 FF Gamer Store</h1>
 
-<div>🛒 <span id="cart">0</span></div>
+<div class="top">
+
+<span>Vendas: <b id="vendas">0</b></span>
+
+<span>🛒 <b id="cart">0</b></span>
+
+</div>
 
 </header>
 
-<button id="adminBtn" onclick="admin()">.</button>
-
 <div id="produtos"></div>
 
-<div id="pixBox">
+<div id="checkout" class="hidden">
 
-<h3>Pagamento Pix</h3>
+<h2>Pagamento Pix</h2>
 
-<img id="pixQR">
+<p id="pixCode">SUA-CHAVE-PIX</p>
 
-<p id="pixCode"></p>
+<button onclick="copiarPix()">Copiar Pix</button>
 
-<button onclick="copiar()">Copiar Pix</button>
-
-<button onclick="enviarWhats()">Receber Conta no WhatsApp</button>
+<button onclick="receberConta()">Receber Conta</button>
 
 </div>
 
-<button class="install" id="installBtn">Instalar App</button>
+<button id="adminBtn" onclick="adminLogin()">.</button>
 
-<script>
-
-let carrinho=[]
-
-let contas = JSON.parse(localStorage.getItem("contas")) || [
-
-{nome:"Conta FF Diamante",preco:25,login:"conta1@email.com",senha:"123456"},
-{nome:"Conta FF Veterana",preco:30,login:"conta2@email.com",senha:"123456"},
-{nome:"Conta FF Rara",preco:40,login:"conta3@email.com",senha:"123456"}
-
-]
-
-function carregar(){
-
-let area=document.getElementById("produtos")
-
-area.innerHTML=""
-
-contas.forEach((c,i)=>{
-
-area.innerHTML+=`
-
-<div class="card">
-
-<h3>${c.nome}</h3>
-
-<p>R$ ${c.preco}</p>
-
-<button onclick="comprar(${i})">Comprar</button>
-
-</div>
-
-`
-
-})
-
-}
-
-function comprar(i){
-
-carrinho=[contas[i]]
-
-document.getElementById("cart").innerText=1
-
-let pix="00020126360014BR.GOV.BCB.PIX0114SUA-CHAVE-PIX520400005303986540"+contas[i].preco+"5802BR"
-
-document.getElementById("pixCode").innerText=pix
-
-document.getElementById("pixQR").src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data="+pix
-
-document.getElementById("pixBox").style.display="block"
-
-}
-
-function copiar(){
-
-navigator.clipboard.writeText(document.getElementById("pixCode").innerText)
-
-alert("Pix copiado")
-
-}
-
-function enviarWhats(){
-
-let c=carrinho[0]
-
-let msg="Conta Free Fire:\nLogin: "+c.login+"\nSenha: "+c.senha
-
-let url="https://wa.me/?text="+encodeURIComponent(msg)
-
-window.open(url)
-
-contas.splice(0,1)
-
-localStorage.setItem("contas",JSON.stringify(contas))
-
-carregar()
-
-}
-
-function admin(){
-
-let senha=prompt("Senha admin")
-
-if(senha=="1234"){
-
-let nome=prompt("Nome conta")
-
-let preco=prompt("Preço")
-
-let login=prompt("Login")
-
-let senha=prompt("Senha")
-
-contas.push({nome,preco,login,senha})
-
-localStorage.setItem("contas",JSON.stringify(contas))
-
-carregar()
-
-}
-
-}
-
-carregar()
-
-let deferredPrompt
-
-window.addEventListener('beforeinstallprompt',(e)=>{
-
-e.preventDefault()
-
-deferredPrompt=e
-
-document.getElementById("installBtn").style.display="block"
-
-})
-
-document.getElementById("installBtn").onclick=()=>{
-
-deferredPrompt.prompt()
-
-}
-
-</script>
+<script src="script.js"></script>
 
 </body>
 
