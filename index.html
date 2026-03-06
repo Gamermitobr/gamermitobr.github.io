@@ -2,166 +2,169 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Loja de Contas Gamer</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Loja Gamer</title>
 
 <style>
 
 body{
 font-family:Arial;
+margin:0;
 background:#0f0f0f;
 color:white;
-margin:0;
 }
 
 header{
-background:#121212;
+background:#141414;
 padding:15px;
-text-align:center;
-font-size:22px;
-font-weight:bold;
+display:flex;
+justify-content:space-between;
 }
 
-.container{
-padding:15px;
+.grid{
 display:grid;
 grid-template-columns:1fr 1fr;
-gap:15px;
+gap:12px;
+padding:12px;
 }
 
-.produto{
+.card{
 background:#1c1c1c;
-padding:15px;
+padding:10px;
 border-radius:10px;
-text-align:center;
 }
 
-.produto img{
+.card img{
 width:100%;
-border-radius:8px;
-}
-
-.preco{
-color:#00e676;
-font-size:20px;
-margin:10px 0;
+border-radius:6px;
 }
 
 button{
 background:#00c853;
 border:none;
-padding:12px;
-width:100%;
+padding:10px;
 border-radius:6px;
 color:white;
-font-size:16px;
 cursor:pointer;
 }
 
-button:hover{
-background:#00e676;
-}
-
-.pixbox{
-display:none;
+.panel{
 position:fixed;
 top:0;
 left:0;
 width:100%;
 height:100%;
-background:rgba(0,0,0,0.8);
+background:#000000d0;
+display:none;
 justify-content:center;
 align-items:center;
 }
 
-.pixcontent{
+.box{
 background:#1c1c1c;
-padding:25px;
+padding:20px;
 border-radius:10px;
-text-align:center;
 width:90%;
-max-width:350px;
+max-width:400px;
 }
 
-.whatsapp{
-background:#25D366;
-margin-top:10px;
-}
-
-.fechar{
-background:red;
-margin-top:10px;
+input{
+width:100%;
+padding:8px;
+margin:6px 0;
 }
 
 </style>
+
 </head>
 
 <body>
 
 <header>
-Loja de Contas Gamer
+
+<div>🕹 Loja Gamer</div>
+
+<div>
+🛒 <span id="cartcount">0</span>
+</div>
+
 </header>
 
-<div class="container">
+<div class="grid" id="produtos"></div>
 
-<div class="produto">
-<img src="https://i.imgur.com/Wq2gF.jpg">
-<h3>Conta Free Fire Rara</h3>
-<p>Nível alto + skins</p>
-<div class="preco">R$20</div>
-<button onclick="comprar()">Comprar</button>
-</div>
-
-<div class="produto">
-<img src="https://i.imgur.com/Wq2gF.jpg">
-<h3>Conta Free Fire Diamante</h3>
-<p>Rank diamante</p>
-<div class="preco">R$30</div>
-<button onclick="comprar()">Comprar</button>
-</div>
-
-<div class="produto">
-<img src="https://i.imgur.com/Wq2gF.jpg">
-<h3>Conta Free Fire Veterana</h3>
-<p>Itens antigos</p>
-<div class="preco">R$15</div>
-<button onclick="comprar()">Comprar</button>
-</div>
-
-<div class="produto">
-<img src="https://i.imgur.com/Wq2gF.jpg">
-<h3>Conta Free Fire Full</h3>
-<p>Muitas skins</p>
-<div class="preco">R$40</div>
-<button onclick="comprar()">Comprar</button>
-</div>
-
-</div>
-
-<div class="pixbox" id="pix">
-
-<div class="pixcontent">
-
-<h2>Pagar via Pix</h2>
-
-<p>Chave Pix:</p>
-
-<b id="chavepix">https://nubank.com.br/cobrar/1dxcyy/69aa34f4-edeb-4d58-869b-d2383c499e9b</b>
-
-<p style="font-size:14px;margin-top:10px;">
-Após pagar envie o comprovante no WhatsApp
-</p>
-
-<a href="https://wa.me/5538991464508">
-<button class="whatsapp">
-Enviar comprovante
+<button onclick="abrirCarrinho()" style="position:fixed;bottom:10px;right:10px;">
+Carrinho
 </button>
-</a>
 
-<button class="fechar" onclick="fechar()">
-Fechar
-</button>
+<div class="panel" id="carrinho">
+
+<div class="box">
+
+<h3>Carrinho</h3>
+
+<div id="itens"></div>
+
+<p>Total: R$ <span id="total"></span></p>
+
+<button onclick="pagar()">Pagar</button>
+
+<button onclick="fechar()">Fechar</button>
+
+</div>
+
+</div>
+
+<div class="panel" id="pix">
+
+<div class="box">
+
+<h3>Pagar com Pix</h3>
+
+<img id="qrcode">
+
+<p id="pixcode"></p>
+
+<button onclick="fechar()">Fechar</button>
+
+</div>
+
+</div>
+
+<div class="panel" id="login">
+
+<div class="box">
+
+<h3>Login Admin</h3>
+
+<input id="user" placeholder="Usuário">
+
+<input id="pass" placeholder="Senha" type="password">
+
+<button onclick="login()">Entrar</button>
+
+</div>
+
+</div>
+
+<div class="panel" id="admin">
+
+<div class="box">
+
+<h3>Painel Admin</h3>
+
+<input id="nome" placeholder="Nome">
+
+<input id="preco" placeholder="Preço">
+
+<input id="estoque" placeholder="Estoque">
+
+<input id="img" placeholder="Imagem">
+
+<button onclick="addProduto()">Adicionar</button>
+
+<p>Vendas: <span id="vendas"></span></p>
+
+<button onclick="fechar()">Fechar</button>
 
 </div>
 
@@ -169,17 +172,137 @@ Fechar
 
 <script>
 
-function comprar(){
+let produtos=JSON.parse(localStorage.getItem("produtos"))||[]
+let carrinho=[]
+let vendas=Number(localStorage.getItem("vendas")||0)
+
+function salvar(){
+localStorage.setItem("produtos",JSON.stringify(produtos))
+}
+
+function render(){
+
+let html=""
+
+produtos.forEach((p,i)=>{
+
+html+=`
+
+<div class="card">
+
+<img src="${p.img}">
+
+<h3>${p.nome}</h3>
+
+<p>R$ ${p.preco}</p>
+
+<p>Estoque: ${p.estoque}</p>
+
+<button onclick="addCarrinho(${i})">Comprar</button>
+
+</div>
+
+`
+
+})
+
+document.getElementById("produtos").innerHTML=html
+
+}
+
+function addProduto(){
+
+let nome=nome.value
+let preco=preco.value
+let estoque=estoque.value
+let img=img.value
+
+produtos.push({nome,preco,estoque,img})
+
+salvar()
+render()
+
+}
+
+function addCarrinho(i){
+
+if(produtos[i].estoque<=0){
+alert("Sem estoque")
+return
+}
+
+carrinho.push(produtos[i])
+
+document.getElementById("cartcount").innerText=carrinho.length
+
+}
+
+function abrirCarrinho(){
+
+let html=""
+let total=0
+
+carrinho.forEach(p=>{
+html+=p.nome+" R$"+p.preco+"<br>"
+total+=Number(p.preco)
+})
+
+itens.innerHTML=html
+total.innerText=total
+
+carrinhoPanel=true
+
+document.getElementById("carrinho").style.display="flex"
+
+}
+
+function pagar(){
+
+vendas++
+
+localStorage.setItem("vendas",vendas)
+
+let chave="SUA_CHAVE_PIX"
+
+let valor=10
+
+let payload=`00020126360014BR.GOV.BCB.PIX0114${chave}520400005303986540${valor}5802BR5913Loja Gamer6009SaoPaulo62070503***6304`
+
+pixcode.innerText=payload
+
+qrcode.src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data="+payload
 
 document.getElementById("pix").style.display="flex"
 
 }
 
-function fechar(){
+function login(){
 
-document.getElementById("pix").style.display="none"
+let u=user.value
+let p=pass.value
+
+if(u=="admin" && p=="1234"){
+
+document.getElementById("login").style.display="none"
+document.getElementById("admin").style.display="flex"
+
+vendas.innerText=localStorage.getItem("vendas")||0
+
+}else{
+
+alert("Login errado")
 
 }
+
+}
+
+function fechar(){
+
+document.querySelectorAll(".panel").forEach(p=>p.style.display="none")
+
+}
+
+render()
 
 </script>
 
