@@ -1,20 +1,187 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Cortes de Lives</title>
-  <link rel="stylesheet" href="styles.css"/>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Loja de Contas Gamer</title>
+
+<style>
+
+body{
+font-family:Arial;
+background:#0f0f0f;
+color:white;
+margin:0;
+}
+
+header{
+background:#121212;
+padding:15px;
+text-align:center;
+font-size:22px;
+font-weight:bold;
+}
+
+.container{
+padding:15px;
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:15px;
+}
+
+.produto{
+background:#1c1c1c;
+padding:15px;
+border-radius:10px;
+text-align:center;
+}
+
+.produto img{
+width:100%;
+border-radius:8px;
+}
+
+.preco{
+color:#00e676;
+font-size:20px;
+margin:10px 0;
+}
+
+button{
+background:#00c853;
+border:none;
+padding:12px;
+width:100%;
+border-radius:6px;
+color:white;
+font-size:16px;
+cursor:pointer;
+}
+
+button:hover{
+background:#00e676;
+}
+
+.pixbox{
+display:none;
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.8);
+justify-content:center;
+align-items:center;
+}
+
+.pixcontent{
+background:#1c1c1c;
+padding:25px;
+border-radius:10px;
+text-align:center;
+width:90%;
+max-width:350px;
+}
+
+.whatsapp{
+background:#25D366;
+margin-top:10px;
+}
+
+.fechar{
+background:red;
+margin-top:10px;
+}
+
+</style>
 </head>
+
 <body>
 
-  <header>
-    <h1>Cortes de Lives 🎬</h1>
-    <p>Assista os melhores momentos das lives aqui!</p>
-  </header>
+<header>
+Loja de Contas Gamer
+</header>
 
-  <main id="videos-container"></main>
+<div class="container">
 
-  <script src="scripts.js"></script>
+<div class="produto">
+<img src="https://i.imgur.com/Wq2gF.jpg">
+<h3>Conta Free Fire Rara</h3>
+<p>Nível alto + skins</p>
+<div class="preco">R$20</div>
+<button onclick="comprar()">Comprar</button>
+</div>
+
+<div class="produto">
+<img src="https://i.imgur.com/Wq2gF.jpg">
+<h3>Conta Free Fire Diamante</h3>
+<p>Rank diamante</p>
+<div class="preco">R$30</div>
+<button onclick="comprar()">Comprar</button>
+</div>
+
+<div class="produto">
+<img src="https://i.imgur.com/Wq2gF.jpg">
+<h3>Conta Free Fire Veterana</h3>
+<p>Itens antigos</p>
+<div class="preco">R$15</div>
+<button onclick="comprar()">Comprar</button>
+</div>
+
+<div class="produto">
+<img src="https://i.imgur.com/Wq2gF.jpg">
+<h3>Conta Free Fire Full</h3>
+<p>Muitas skins</p>
+<div class="preco">R$40</div>
+<button onclick="comprar()">Comprar</button>
+</div>
+
+</div>
+
+<div class="pixbox" id="pix">
+
+<div class="pixcontent">
+
+<h2>Pagar via Pix</h2>
+
+<p>Chave Pix:</p>
+
+<b id="chavepix">https://nubank.com.br/cobrar/1dxcyy/69aa34f4-edeb-4d58-869b-d2383c499e9b</b>
+
+<p style="font-size:14px;margin-top:10px;">
+Após pagar envie o comprovante no WhatsApp
+</p>
+
+<a href="https://wa.me/5538991464508">
+<button class="whatsapp">
+Enviar comprovante
+</button>
+</a>
+
+<button class="fechar" onclick="fechar()">
+Fechar
+</button>
+
+</div>
+
+</div>
+
+<script>
+
+function comprar(){
+
+document.getElementById("pix").style.display="flex"
+
+}
+
+function fechar(){
+
+document.getElementById("pix").style.display="none"
+
+}
+
+</script>
+
 </body>
 </html>
