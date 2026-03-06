@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
 <title>Gamer Store</title>
 
 <style>
@@ -10,80 +12,50 @@
 body{
 margin:0;
 font-family:Arial;
-background:#0e0e0e;
+background:#0d0d0d;
 color:white;
 }
 
 header{
-background:linear-gradient(90deg,#ff004c,#7b00ff);
+background:linear-gradient(90deg,#ff004c,#7a00ff);
 padding:15px;
 display:flex;
 justify-content:space-between;
 align-items:center;
-font-size:18px;
 }
 
-.grid{
+#produtos{
 display:grid;
-grid-template-columns:1fr 1fr;
+grid-template-columns:repeat(2,1fr);
 gap:10px;
 padding:10px;
 }
 
 .card{
-background:#1b1b1b;
-border-radius:10px;
+background:#1a1a1a;
 padding:10px;
-box-shadow:0 0 8px #000;
-}
-
-.card img{
-width:100%;
-border-radius:6px;
-}
-
-.price{
-color:#00ffae;
-font-size:18px;
+border-radius:10px;
+text-align:center;
 }
 
 button{
 background:#ff004c;
 border:none;
 padding:10px;
-border-radius:6px;
 color:white;
-width:100%;
+border-radius:8px;
 margin-top:5px;
 }
 
-.panel{
+#carrinhoBtn{
 position:fixed;
-top:0;
-left:0;
-width:100%;
-height:100%;
-background:#000000dd;
-display:none;
-justify-content:center;
-align-items:center;
-}
-
-.box{
-background:#1b1b1b;
-padding:20px;
+bottom:10px;
+left:10px;
+right:10px;
+background:#ff004c;
+padding:15px;
+text-align:center;
 border-radius:10px;
-width:90%;
-max-width:400px;
-}
-
-input,textarea{
-width:100%;
-padding:8px;
-margin:5px 0;
-background:#111;
-color:white;
-border:none;
 }
 
 </style>
@@ -92,138 +64,64 @@ border:none;
 
 <body>
 
-<header onclick="abrirLogin()">
-🎮 Gamer Store
-<div>🛒 <span id="cartcount">0</span></div>
+<header>
+
+<h2>🎮 Gamer Store</h2>
+
+<div>🛒 <span id="cart">0</span></div>
+
 </header>
 
-<div class="grid" id="produtos"></div>
+<div id="produtos"></div>
 
-<button style="position:fixed;bottom:20px;right:20px" onclick="abrirCarrinho()">
+<div id="carrinhoBtn" onclick="abrirPagamento()">
 Carrinho
-</button>
-
-<div class="panel" id="carrinho">
-<div class="box">
-<h3>Carrinho</h3>
-<div id="itens"></div>
-<p>Total: R$ <span id="total"></span></p>
-<button onclick="pagar()">Pagar Pix</button>
-<button onclick="fechar()">Fechar</button>
-</div>
-</div>
-
-<div class="panel" id="pix">
-<div class="box">
-
-<h3>Pagamento Pix</h3>
-
-<textarea id="pixcode"></textarea>
-
-<img id="qrcode">
-
-<button onclick="copiarPix()">Copiar Pix</button>
-
-<button onclick="entregar()">Confirmar pagamento</button>
-
-</div>
-</div>
-
-<div class="panel" id="login">
-<div class="box">
-
-<h3>Admin</h3>
-
-<input id="user" placeholder="Usuário">
-<input id="pass" type="password" placeholder="Senha">
-
-<button onclick="login()">Entrar</button>
-
-</div>
-</div>
-
-<div class="panel" id="admin">
-<div class="box">
-
-<h3>Painel Admin</h3>
-
-<input id="nome" placeholder="Nome produto">
-<input id="preco" placeholder="Preço">
-<input id="img" placeholder="Imagem">
-
-<textarea id="contas" placeholder="Lista de contas (1 por linha)"></textarea>
-
-<button onclick="addProduto()">Adicionar produto</button>
-
-<button onclick="fechar()">Fechar</button>
-
-</div>
 </div>
 
 <script>
 
-let produtos=JSON.parse(localStorage.getItem("produtos"))||[
+let carrinho = []
 
-{
-nome:"Conta Free Fire Rara",
-preco:20,
-img:"https://i.imgur.com/YG9YF7D.jpeg",
-contas:[
-"login1@email.com | senha123",
-"login2@email.com | senha456",
-"login3@email.com | senha789"
-]
-},
+let contas = [
 
-{
-nome:"Conta Free Fire Veterana",
-preco:35,
-img:"https://i.imgur.com/YG9YF7D.jpeg",
-contas:[
-"conta1@email.com | senha111",
-"conta2@email.com | senha222",
-"conta3@email.com | senha333"
-]
-},
-
-{
-nome:"Conta FF Full Skin",
-preco:50,
-img:"https://i.imgur.com/YG9YF7D.jpeg",
-contas:[
-"skin1@email.com | senha111",
-"skin2@email.com | senha222",
-"skin3@email.com | senha333"
-]
-}
+{nome:"Conta FF Rara",preco:20,login:"conta1@email.com",senha:"123456"},
+{nome:"Conta FF Veterana",preco:25,login:"conta2@email.com",senha:"123456"},
+{nome:"Conta FF Diamante",preco:30,login:"conta3@email.com",senha:"123456"},
+{nome:"Conta FF Mestre",preco:35,login:"conta4@email.com",senha:"123456"},
+{nome:"Conta FF Elite",preco:40,login:"conta5@email.com",senha:"123456"},
+{nome:"Conta FF Ouro",preco:15,login:"conta6@email.com",senha:"123456"},
+{nome:"Conta FF Platina",preco:18,login:"conta7@email.com",senha:"123456"},
+{nome:"Conta FF Lendária",preco:45,login:"conta8@email.com",senha:"123456"},
+{nome:"Conta FF Top",preco:50,login:"conta9@email.com",senha:"123456"},
+{nome:"Conta FF Full Skin",preco:60,login:"conta10@email.com",senha:"123456"},
+{nome:"Conta FF Antiga",preco:22,login:"conta11@email.com",senha:"123456"},
+{nome:"Conta FF Evento",preco:26,login:"conta12@email.com",senha:"123456"},
+{nome:"Conta FF Raríssima",preco:70,login:"conta13@email.com",senha:"123456"},
+{nome:"Conta FF Pro",preco:80,login:"conta14@email.com",senha:"123456"},
+{nome:"Conta FF Premium",preco:90,login:"conta15@email.com",senha:"123456"},
+{nome:"Conta FF Old",preco:32,login:"conta16@email.com",senha:"123456"},
+{nome:"Conta FF 2018",preco:55,login:"conta17@email.com",senha:"123456"},
+{nome:"Conta FF 2019",preco:48,login:"conta18@email.com",senha:"123456"},
+{nome:"Conta FF 2020",preco:38,login:"conta19@email.com",senha:"123456"},
+{nome:"Conta FF Completa",preco:100,login:"conta20@email.com",senha:"123456"}
 
 ]
 
-let carrinho=[]
+function carregar(){
 
-function salvar(){
-localStorage.setItem("produtos",JSON.stringify(produtos))
-}
+let area = document.getElementById("produtos")
 
-function render(){
+contas.forEach((c,i)=>{
 
-let html=""
-
-produtos.forEach((p,i)=>{
-
-html+=`
+area.innerHTML += `
 
 <div class="card">
 
-<img src="${p.img}">
+<h3>${c.nome}</h3>
 
-<h3>${p.nome}</h3>
+<p>R$ ${c.preco}</p>
 
-<div class="price">R$ ${p.preco}</div>
-
-<p>Estoque: ${p.contas.length}</p>
-
-<button onclick="addCarrinho(${i})">Comprar</button>
+<button onclick="comprar(${i})">Comprar</button>
 
 </div>
 
@@ -231,129 +129,50 @@ html+=`
 
 })
 
-document.getElementById("produtos").innerHTML=html
+}
+
+function comprar(i){
+
+carrinho.push(contas[i])
+
+document.getElementById("cart").innerText = carrinho.length
 
 }
 
-function addCarrinho(i){
+function abrirPagamento(){
 
-if(produtos[i].contas.length==0){
+if(carrinho.length == 0){
 
-alert("Sem estoque")
+alert("Carrinho vazio")
+
 return
 
 }
 
-carrinho.push(i)
+let conta = carrinho[0]
 
-cartcount.innerText=carrinho.length
+alert(
 
-}
+"PIX para pagamento:\n\n" +
 
-function abrirCarrinho(){
+"chavepix@email.com\n\n" +
 
-let html=""
-let total=0
+"Após pagar você receberá:\n\n" +
 
-carrinho.forEach(i=>{
+"LOGIN: "+conta.login+"\nSENHA: "+conta.senha
 
-html+=produtos[i].nome+"<br>"
-total+=produtos[i].preco
+)
 
-})
+let vendas = localStorage.getItem("vendas") || 0
 
-itens.innerHTML=html
-document.getElementById("total").innerText=total
-
-document.getElementById("carrinho").style.display="flex"
+localStorage.setItem("vendas",parseInt(vendas)+1)
 
 }
 
-function pagar(){
-
-let chave="SUA_CHAVE_PIX"
-
-pixcode.value=chave
-
-qrcode.src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data="+chave
-
-document.getElementById("pix").style.display="flex"
-
-}
-
-function copiarPix(){
-
-navigator.clipboard.writeText(pixcode.value)
-
-alert("Pix copiado")
-
-}
-
-function entregar(){
-
-let i=carrinho[0]
-
-let conta=produtos[i].contas.shift()
-
-alert("Conta entregue:\n"+conta)
-
-salvar()
-
-carrinho=[]
-
-render()
-
-}
-
-function abrirLogin(){
-
-document.getElementById("login").style.display="flex"
-
-}
-
-function login(){
-
-if(user.value=="admin" && pass.value=="1234"){
-
-login.style.display="none"
-
-admin.style.display="flex"
-
-}else{
-
-alert("Login errado")
-
-}
-
-}
-
-function addProduto(){
-
-let lista=contas.value.split("\n")
-
-produtos.push({
-
-nome:nome.value,
-preco:preco.value,
-img:img.value,
-contas:lista
-
-})
-
-salvar()
-render()
-
-}
-
-function fechar(){
-
-document.querySelectorAll(".panel").forEach(p=>p.style.display="none")
-
-}
-
-render()
+carregar()
 
 </script>
 
 </body>
+
 </html>
