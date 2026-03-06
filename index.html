@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-
 <title>Gamer Store</title>
 
 <style>
@@ -11,31 +10,31 @@
 body{
 margin:0;
 font-family:Arial;
-background:#0b0b0b;
+background:#0e0e0e;
 color:white;
 }
 
 header{
-background:linear-gradient(90deg,#ff003c,#6a00ff);
+background:linear-gradient(90deg,#ff004c,#7b00ff);
 padding:15px;
 display:flex;
 justify-content:space-between;
 align-items:center;
-font-weight:bold;
+font-size:18px;
 }
 
 .grid{
 display:grid;
 grid-template-columns:1fr 1fr;
-gap:12px;
-padding:12px;
+gap:10px;
+padding:10px;
 }
 
 .card{
-background:#1a1a1a;
+background:#1b1b1b;
 border-radius:10px;
 padding:10px;
-box-shadow:0 0 10px #000;
+box-shadow:0 0 8px #000;
 }
 
 .card img{
@@ -44,12 +43,12 @@ border-radius:6px;
 }
 
 .price{
-color:#00ff9c;
+color:#00ffae;
 font-size:18px;
 }
 
 button{
-background:#ff003c;
+background:#ff004c;
 border:none;
 padding:10px;
 border-radius:6px;
@@ -71,32 +70,36 @@ align-items:center;
 }
 
 .box{
-background:#1a1a1a;
+background:#1b1b1b;
 padding:20px;
 border-radius:10px;
 width:90%;
 max-width:400px;
 }
 
-input{
+input,textarea{
 width:100%;
 padding:8px;
 margin:5px 0;
+background:#111;
+color:white;
+border:none;
 }
 
 </style>
+
 </head>
 
 <body>
 
-<header>
+<header onclick="abrirLogin()">
 🎮 Gamer Store
 <div>🛒 <span id="cartcount">0</span></div>
 </header>
 
 <div class="grid" id="produtos"></div>
 
-<button style="position:fixed;bottom:15px;right:15px" onclick="abrirCarrinho()">
+<button style="position:fixed;bottom:20px;right:20px" onclick="abrirCarrinho()">
 Carrinho
 </button>
 
@@ -105,24 +108,36 @@ Carrinho
 <h3>Carrinho</h3>
 <div id="itens"></div>
 <p>Total: R$ <span id="total"></span></p>
-<button onclick="pagar()">Pagar com Pix</button>
+<button onclick="pagar()">Pagar Pix</button>
 <button onclick="fechar()">Fechar</button>
 </div>
 </div>
 
-<div class="panel" id="pixbox">
+<div class="panel" id="pix">
 <div class="box">
-<h3>Pagamento Pix</h3>
 
-<p>Copiar código Pix:</p>
+<h3>Pagamento Pix</h3>
 
 <textarea id="pixcode"></textarea>
 
 <img id="qrcode">
 
-<p>Após pagar você receberá a conta automaticamente</p>
+<button onclick="copiarPix()">Copiar Pix</button>
 
 <button onclick="entregar()">Confirmar pagamento</button>
+
+</div>
+</div>
+
+<div class="panel" id="login">
+<div class="box">
+
+<h3>Admin</h3>
+
+<input id="user" placeholder="Usuário">
+<input id="pass" type="password" placeholder="Senha">
+
+<button onclick="login()">Entrar</button>
 
 </div>
 </div>
@@ -140,8 +155,6 @@ Carrinho
 
 <button onclick="addProduto()">Adicionar produto</button>
 
-<p>Vendas: <span id="vendas"></span></p>
-
 <button onclick="fechar()">Fechar</button>
 
 </div>
@@ -149,9 +162,44 @@ Carrinho
 
 <script>
 
-let produtos=JSON.parse(localStorage.getItem("produtos"))||[]
+let produtos=JSON.parse(localStorage.getItem("produtos"))||[
+
+{
+nome:"Conta Free Fire Rara",
+preco:20,
+img:"https://i.imgur.com/YG9YF7D.jpeg",
+contas:[
+"login1@email.com | senha123",
+"login2@email.com | senha456",
+"login3@email.com | senha789"
+]
+},
+
+{
+nome:"Conta Free Fire Veterana",
+preco:35,
+img:"https://i.imgur.com/YG9YF7D.jpeg",
+contas:[
+"conta1@email.com | senha111",
+"conta2@email.com | senha222",
+"conta3@email.com | senha333"
+]
+},
+
+{
+nome:"Conta FF Full Skin",
+preco:50,
+img:"https://i.imgur.com/YG9YF7D.jpeg",
+contas:[
+"skin1@email.com | senha111",
+"skin2@email.com | senha222",
+"skin3@email.com | senha333"
+]
+}
+
+]
+
 let carrinho=[]
-let vendas=Number(localStorage.getItem("vendas")||0)
 
 function salvar(){
 localStorage.setItem("produtos",JSON.stringify(produtos))
@@ -187,29 +235,13 @@ document.getElementById("produtos").innerHTML=html
 
 }
 
-function addProduto(){
-
-let lista=document.getElementById("contas").value.split("\n")
-
-produtos.push({
-
-nome:nome.value,
-preco:preco.value,
-img:img.value,
-contas:lista
-
-})
-
-salvar()
-render()
-
-}
-
 function addCarrinho(i){
 
 if(produtos[i].contas.length==0){
+
 alert("Sem estoque")
 return
+
 }
 
 carrinho.push(i)
@@ -226,14 +258,12 @@ let total=0
 carrinho.forEach(i=>{
 
 html+=produtos[i].nome+"<br>"
-total+=Number(produtos[i].preco)
+total+=produtos[i].preco
 
 })
 
 itens.innerHTML=html
 document.getElementById("total").innerText=total
-
-carrinhoPanel=true
 
 document.getElementById("carrinho").style.display="flex"
 
@@ -243,13 +273,19 @@ function pagar(){
 
 let chave="SUA_CHAVE_PIX"
 
-let payload="PIX-"+chave
+pixcode.value=chave
 
-pixcode.value=payload
+qrcode.src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data="+chave
 
-qrcode.src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data="+payload
+document.getElementById("pix").style.display="flex"
 
-document.getElementById("pixbox").style.display="flex"
+}
+
+function copiarPix(){
+
+navigator.clipboard.writeText(pixcode.value)
+
+alert("Pix copiado")
 
 }
 
@@ -261,14 +297,50 @@ let conta=produtos[i].contas.shift()
 
 alert("Conta entregue:\n"+conta)
 
-vendas++
-
-localStorage.setItem("vendas",vendas)
-
 salvar()
 
 carrinho=[]
 
+render()
+
+}
+
+function abrirLogin(){
+
+document.getElementById("login").style.display="flex"
+
+}
+
+function login(){
+
+if(user.value=="admin" && pass.value=="1234"){
+
+login.style.display="none"
+
+admin.style.display="flex"
+
+}else{
+
+alert("Login errado")
+
+}
+
+}
+
+function addProduto(){
+
+let lista=contas.value.split("\n")
+
+produtos.push({
+
+nome:nome.value,
+preco:preco.value,
+img:img.value,
+contas:lista
+
+})
+
+salvar()
 render()
 
 }
