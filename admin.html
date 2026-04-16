@@ -1,67 +1,104 @@
-<script type="module">
-import { supabase } from './supabase.js'
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Painel Admin</title>
 
-const SENHA = "@Robin33" // 🔐 MUDE AQUI
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #0f0f0f;
+      color: #f1f1f1;
+      padding: 15px;
+      margin: 0;
+    }
 
-window.entrar = function() {
-  if (senha.value === SENHA) {
-    loginBox.classList.add("hidden")
-    painel.classList.remove("hidden")
-    listar() // já carrega a lista quando loga
-  } else {
-    alert("Senha errada")
-  }
-}
+    h1, h3 {
+      text-align: center;
+      margin: 0 0 15px 0;
+    }
 
-window.listar = async function() {
-  const { data, error } = await supabase
-    .from('campaigns')
-    .select('*')
-    .order('created_at', { ascending: false })
+    .box {
+      background-color: #1a1a1a;
+      padding: 20px;
+      border-radius: 12px;
+      max-width: 500px;
+      margin: 20px auto;
+    }
 
-  if (error) {
-    lista.innerHTML = `<p style="color:#ff5252">Erro ao carregar: ${error.message}</p>`
-    return
-  }
+    input {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 10px;
+      border-radius: 8px;
+      border: none;
+      background-color: #2a2a2a;
+      color: #fff;
+      box-sizing: border-box;
+    }
 
-  if (data.length === 0) {
-    lista.innerHTML = `<p>Nenhuma vaquinha cadastrada.</p>`
-    return
-  }
+    button {
+      width: 100%;
+      padding: 12px;
+      background-color: #00c853;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+    }
 
-  lista.innerHTML = ""
-  data.forEach(item => {
-    lista.innerHTML += `
-      <div style="background:#2a2a2a; padding:12px; margin-top:10px; border-radius:8px;">
-        <b>${item.title}</b><br>
-        Meta: R$ ${item.goal}<br>
-        Arrecadado: R$ ${item.current_amount}<br>
-        Status: ${item.status || 'ativa'}<br>
-        <button 
-          style="background:#ff1744; margin-top:8px" 
-          onclick="excluirVaquinha('${item.id}', '${item.title.replace(/'/g, "\\'")}')"
-        >
-          Excluir
-        </button>
-      </div>
-    `
-  })
-}
+    button.delete {
+      background-color: #ff1744;
+      margin-top: 8px;
+    }
 
-window.excluirVaquinha = async function(id, titulo) {
-  const confirmar = confirm(`Tem certeza que quer excluir a vaquinha "${titulo}"?\n\nIsso vai apagar ela do banco.`)
-  if (!confirmar) return
+    button.secondary {
+      background-color: #2a2a2a;
+      border: 1px solid #3a3a3a;
+      margin-bottom: 10px;
+    }
 
-  const { error } = await supabase
-    .from('campaigns')
-    .delete()
-    .eq('id', id)
+    .item-vaquinha {
+      background: #2a2a2a;
+      padding: 14px;
+      margin-top: 12px;
+      border-radius: 8px;
+      border-left: 3px solid #00c853;
+    }
 
-  if (error) {
-    alert(`Erro ao excluir: ${error.message}`)
-  } else {
-    alert('Vaquinha excluída com sucesso')
-    listar() // recarrega a lista
-  }
-}
-</script>
+    .item-vaquinha.excluida {
+      border-left: 3px solid #ff1744;
+      opacity: 0.6;
+    }
+
+    .item-vaquinha b {
+      font-size: 17px;
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .item-vaquinha .info {
+      font-size: 14px;
+      color: #bdbdbd;
+      line-height: 1.5;
+    }
+
+    .alert {
+      padding: 12px;
+      border-radius: 8px;
+      margin-top: 10px;
+      text-align: center;
+    }
+
+    .alert.error {
+      background: #4a1515;
+      color: #ff5252;
+    }
+
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
