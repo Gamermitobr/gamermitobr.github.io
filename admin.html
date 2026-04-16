@@ -86,4 +86,106 @@
     }
 
     .alert {
-      padding: 12px
+      padding: 12px;
+      border-radius: 8px;
+      margin-top: 10px;
+      text-align: center;
+    }
+
+    .alert.error {
+      background: #4a1515;
+      color: #ff5252;
+    }
+
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+
+<h1>⚙️ Painel Admin</h1>
+
+<!-- LOGIN ADMIN -->
+<div class="box" id="loginBox">
+  <h3>Acesso restrito</h3>
+  <input type="password" id="senha" placeholder="Digite a senha">
+  <button onclick="entrar()">Entrar</button>
+</div>
+
+<!-- CONTEÚDO ADMIN -->
+<div class="box hidden" id="painel">
+  <h3>Bem-vindo ao painel</h3>
+  <button class="secondary" onclick="listar()">Ver Vaquinhas</button>
+  <div id="lista"></div>
+</div>
+
+<script type="module">
+import { supabase } from './supabase.js'
+
+const SENHA = "@Robin33" // 🔐 MUDE AQUI
+
+window.entrar = function() {
+  if (senha.value === SENHA) {
+    loginBox.classList.add("hidden")
+    painel.classList.remove("hidden")
+    listar()
+  } else {
+    alert("Senha errada")
+  }
+}
+
+window.listar = async function() {
+  const { data, error } = await supabase
+    .from('campaigns')
+    .select('*')
+    .order('created_at', { ascending: false })
+
+  if (error) {
+    lista.innerHTML = `<div class="alert error">Erro ao carregar: ${error.message}</div>`
+    return
+  }
+
+  if (data.length === 0) {
+    lista.innerHTML = `<div class="alert">Nenhuma vaquinha cadastrada.</div>`
+    return
+  }
+
+  lista.innerHTML = ""
+  data.forEach(item => {
+    const isExcluida = item.status === 'excluida'
+    lista.innerHTML += `
+      <div class="item-vaquinha ${isExcluida ? 'excluida' : ''}">
+        <b>${item.title}</b>
+        <div class="info">
+          Meta: R$ ${item.goal}<br>
+          Arrecadado: R$ ${item.current_amount}<br>
+          Status: ${item.status || 'ativa'}
+        </div>
+        ${!isExcluida ? `<button class="delete" onclick="excluirVaquinha('${item.id}', '${item.title.replace(/'/g, "\\'")}')">Excluir</button>` : ''}
+      </div>
+    `
+  })
+}
+
+window.excluirVaquinha = async function(id, titulo) {
+  const confirmar = confirm(`Tem certeza que quer excluir "${titulo}"?`)
+  if (!confirmar) return
+
+  // SOFT DELETE - recomendado
+  const { error } = await supabase
+    .from('campaigns')
+    .update({ status: 'excluida' })
+    .eq('id', id)
+
+  if (error) {
+    alert(`Erro: ${error.message}`)
+  } else {
+    listar()
+  }
+}
+</script>
+
+</body>
+</html>
