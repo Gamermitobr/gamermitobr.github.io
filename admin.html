@@ -1,40 +1,105 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin</title>
-  <link rel="stylesheet" href="style.css">
+  <title>Painel Admin</title>
+
+  <style>
+    body {
+      background-color: #0f0f0f;
+      color: #ffffff;
+      font-family: Arial;
+      margin: 0;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+    }
+
+    .box {
+      background-color: #1a1a1a;
+      padding: 20px;
+      border-radius: 12px;
+      max-width: 500px;
+      margin: 20px auto;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 10px;
+      border-radius: 8px;
+      border: none;
+      background-color: #2a2a2a;
+      color: white;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background-color: #00c853;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      margin-top: 5px;
+    }
+
+    .hidden {
+      display: none;
+    }
+  </style>
 </head>
 
 <body>
 
-<h1>🔐 Admin</h1>
+<h1>⚙️ Painel Admin</h1>
 
-<input type="password" id="senha" placeholder="Senha">
-<button onclick="entrar()">Entrar</button>
+<!-- LOGIN ADMIN -->
+<div class="box" id="loginBox">
+  <h3>Acesso restrito</h3>
+  <input type="password" id="senha" placeholder="Digite a senha">
+  <button onclick="entrar()">Entrar</button>
+</div>
 
-<div id="painel" style="display:none;"></div>
+<!-- CONTEÚDO ADMIN -->
+<div class="box hidden" id="painel">
+  <h3>Bem-vindo ao painel</h3>
+
+  <button onclick="listar()">Ver Vaquinhas</button>
+
+  <div id="lista"></div>
+</div>
 
 <script type="module">
 import { supabase } from './supabase.js'
 
-const SENHA = "123456"
+const SENHA = "123456" // 🔐 MUDE AQUI
 
-window.entrar = async function() {
-  if (senha.value !== SENHA) {
-    alert("Errado")
-    return
+window.entrar = function() {
+  if (senha.value === SENHA) {
+    loginBox.classList.add("hidden")
+    painel.classList.remove("hidden")
+  } else {
+    alert("Senha errada")
   }
+}
 
-  painel.style.display = "block"
+window.listar = async function() {
+  const { data } = await supabase.from('campaigns').select('*')
 
-  const { data } = await supabase.from('profiles').select('*')
+  lista.innerHTML = ""
 
-  painel.innerHTML = data.map(u => `
-    <div class="card">
-      <p>${u.email}</p>
-    </div>
-  `).join('')
+  data.forEach(item => {
+    lista.innerHTML += `
+      <div style="background:#2a2a2a; padding:10px; margin-top:10px; border-radius:8px;">
+        <b>${item.title}</b><br>
+        Meta: R$ ${item.goal}<br>
+        Arrecadado: R$ ${item.current_amount}
+      </div>
+    `
+  })
 }
 </script>
 
