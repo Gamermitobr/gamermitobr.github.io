@@ -1,37 +1,99 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Login</title>
-  <link rel="stylesheet" href="style.css">
+
+  <!-- CSS DIRETO (GARANTE FUNDO PRETO) -->
+  <style>
+    body {
+      background-color: #0f0f0f;
+      color: #ffffff;
+      font-family: Arial;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .box {
+      background-color: #1a1a1a;
+      padding: 25px;
+      border-radius: 12px;
+      width: 90%;
+      max-width: 350px;
+      text-align: center;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 10px;
+      border-radius: 8px;
+      border: none;
+      background-color: #2a2a2a;
+      color: white;
+      font-size: 16px;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background-color: #00c853;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      margin-top: 5px;
+    }
+
+    h2 {
+      margin-bottom: 15px;
+    }
+  </style>
 </head>
 
 <body>
 
-<h1>🔐 Login</h1>
+<div class="box">
+  <h2>Login</h2>
 
-<input type="email" id="email" placeholder="Email">
-<input type="password" id="senha" placeholder="Senha">
+  <input id="email" type="email" placeholder="Seu email">
+  <input id="password" type="password" placeholder="Sua senha">
 
-<button onclick="login()">Entrar</button>
+  <button onclick="login()">Entrar</button>
+  <button onclick="registrar()">Criar conta</button>
+</div>
 
 <script type="module">
 import { supabase } from './supabase.js'
 
 window.login = async function() {
-  const email = document.getElementById('email').value
-  const senha = document.getElementById('senha').value
-
   const { error } = await supabase.auth.signInWithPassword({
-    email,
-    password: senha
+    email: email.value,
+    password: password.value
   })
 
   if (error) {
-    alert("Erro ao logar")
+    alert(error.message)
   } else {
-    alert("Logado com sucesso")
+    alert("Logado!")
     window.location.href = "index.html"
+  }
+}
+
+window.registrar = async function() {
+  const { error } = await supabase.auth.signUp({
+    email: email.value,
+    password: password.value
+  })
+
+  if (error) {
+    alert(error.message)
+  } else {
+    alert("Conta criada!")
   }
 }
 </script>
