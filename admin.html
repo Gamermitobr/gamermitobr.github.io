@@ -38,6 +38,10 @@
       box-sizing: border-box;
     }
 
+    input:focus {
+      outline: 2px solid #00c853;
+    }
+
     button {
       width: 100%;
       padding: 12px;
@@ -47,11 +51,24 @@
       border-radius: 8px;
       font-size: 16px;
       cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    button:hover {
+      background-color: #00b248;
+    }
+
+    button:active {
+      transform: scale(0.98);
     }
 
     button.delete {
       background-color: #ff1744;
       margin-top: 8px;
+    }
+
+    button.delete:hover {
+      background-color: #d50000;
     }
 
     button.secondary {
@@ -60,17 +77,16 @@
       margin-bottom: 10px;
     }
 
+    button.secondary:hover {
+      background-color: #3a3a3a;
+    }
+
     .item-vaquinha {
       background: #2a2a2a;
       padding: 14px;
       margin-top: 12px;
       border-radius: 8px;
       border-left: 3px solid #00c853;
-    }
-
-    .item-vaquinha.excluida {
-      border-left: 3px solid #ff1744;
-      opacity: 0.6;
     }
 
     .item-vaquinha b {
@@ -95,6 +111,11 @@
     .alert.error {
       background: #4a1515;
       color: #ff5252;
+    }
+
+    .alert.success {
+      background: #153d2a;
+      color: #00e676;
     }
 
     .hidden {
@@ -154,34 +175,32 @@ window.listar = async function() {
 
   lista.innerHTML = ""
   data.forEach(item => {
-    const isExcluida = item.status === 'excluida'
     lista.innerHTML += `
-      <div class="item-vaquinha ${isExcluida ? 'excluida' : ''}">
+      <div class="item-vaquinha">
         <b>${item.title}</b>
         <div class="info">
           Meta: R$ ${item.goal}<br>
-          Arrecadado: R$ ${item.current_amount}<br>
-          Status: ${item.status || 'ativa'}
+          Arrecadado: R$ ${item.current_amount}
         </div>
-        ${!isExcluida ? `<button class="delete" onclick="excluirVaquinha('${item.id}', '${item.title.replace(/'/g, "\\'")}')">Excluir</button>` : ''}
+        <button class="delete" onclick="excluirVaquinha('${item.id}', '${item.title.replace(/'/g, "\\'")}')">Excluir</button>
       </div>
     `
   })
 }
 
 window.excluirVaquinha = async function(id, titulo) {
-  const confirmar = confirm(`Tem certeza que quer excluir "${titulo}"?`)
+  const confirmar = confirm(`Tem certeza que quer EXCLUIR PERMANENTEMENTE "${titulo}"?\n\nEssa ação não pode ser desfeita.`)
   if (!confirmar) return
 
-  // SOFT DELETE - recomendado
   const { error } = await supabase
     .from('campaigns')
-    .update({ status: 'excluida' })
+    .delete()
     .eq('id', id)
 
   if (error) {
-    alert(`Erro: ${error.message}`)
+    alert(`Erro ao excluir: ${error.message}`)
   } else {
+    alert('Vaquinha excluída com sucesso')
     listar()
   }
 }
