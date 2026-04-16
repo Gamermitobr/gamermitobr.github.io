@@ -4,7 +4,50 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Criar Vaquinha</title>
-  <link rel="stylesheet" href="style.css">
+
+  <!-- CSS FORÇADO -->
+  <style>
+    body {
+      background-color: #0f0f0f;
+      color: #ffffff;
+      font-family: Arial;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .card {
+      background-color: #1a1a1a;
+      padding: 20px;
+      border-radius: 12px;
+      max-width: 400px;
+      margin: auto;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 10px;
+      border-radius: 8px;
+      border: none;
+      background-color: #2a2a2a;
+      color: white;
+      font-size: 16px;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background-color: #00c853;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+  </style>
 </head>
 
 <body>
@@ -12,15 +55,11 @@
 <h1>➕ Criar Vaquinha</h1>
 
 <div class="card">
-
-  <input id="title" placeholder="Título" class="input">
-
-  <textarea id="desc" placeholder="Descrição" class="input"></textarea>
-
-  <input id="goal" type="number" placeholder="Meta" class="input">
+  <input id="title" placeholder="Título">
+  <textarea id="desc" placeholder="Descrição"></textarea>
+  <input id="goal" type="number" placeholder="Meta">
 
   <button onclick="criar()">Criar</button>
-
 </div>
 
 <script type="module">
