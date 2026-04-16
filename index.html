@@ -2,27 +2,44 @@
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8">
-
-  <!-- RESPONSIVO -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <title>Vaquinhas</title>
+  <title>Vaquinha Online</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<h1>Crie sua Vaquinha</h1>
+<header class="header">
+  <h1>💰 Vaquinha Online</h1>
 
-<div id="auth-area">
-  <a href="login.html" id="login-link">Login</a>
-  <span id="user-info"></span>
-  <button id="logout" style="display:none;">Sair</button>
-</div>
+  <div id="auth-area">
+    <a href="login.html" id="login-link">Entrar</a>
+    <span id="user-info"></span>
+    <button id="logout" style="display:none;">Sair</button>
+  </div>
+</header>
 
-<div class="home-box">
-  <p>Crie sua vaquinha e compartilhe o link com quem quiser.</p>
-  <a href="create.html" class="btn">Criar Vaquinha</a>
-</div>
+<section class="hero">
+  <h2>Crie sua vaquinha em segundos</h2>
+  <p>Compartilhe o link e receba ajuda de qualquer pessoa.</p>
+
+  <a href="create.html" class="btn-main">Criar minha vaquinha</a>
+</section>
+
+<section class="features">
+  <div class="feature">
+    ⚡ Rápido
+  </div>
+  <div class="feature">
+    🔗 Link único
+  </div>
+  <div class="feature">
+    💸 Receba via PIX
+  </div>
+</section>
+
+<footer>
+  <p>© 2026 - Sua plataforma de vaquinhas</p>
+</footer>
 
 <script type="module" src="app.js"></script>
 </body>
