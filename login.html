@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Login</title>
+</head>
+<body>
+
+<h1>Login / Cadastro</h1>
+
+<input type="email" id="email" placeholder="Email"><br><br>
+<input type="password" id="password" placeholder="Senha"><br><br>
+
+<button id="signup">Criar conta</button>
+<button id="login">Entrar</button>
+
+<p id="msg"></p>
+
+<script type="module">
+import { supabase } from './supabase.js'
+
+const msg = document.getElementById('msg')
+
+document.getElementById('signup').onclick = async () => {
+  const email = document.getElementById('email').value
+  const password = document.getElementById('password').value
+
+  const { error } = await supabase.auth.signUp({
+    email,
+    password
+  })
+
+  msg.innerText = error ? error.message : "Conta criada! Verifique seu email"
+}
+
+document.getElementById('login').onclick = async () => {
+  const email = document.getElementById('email').value
+  const password = document.getElementById('password').value
+
+  const { error } = await supabase.auth.signInWithPassword({
+    email,
+    password
+  })
+
+  if (error) {
+    msg.innerText = error.message
+  } else {
+    window.location.href = "index.html"
+  }
+}
+</script>
+
+</body>
+</html>
