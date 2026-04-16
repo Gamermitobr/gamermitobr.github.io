@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Criar</title>
+  <title>Criar Vaquinha</title>
   <link rel="stylesheet" href="style.css">
 </head>
 
@@ -10,11 +11,17 @@
 
 <h1>➕ Criar Vaquinha</h1>
 
-<input id="title" placeholder="Título">
-<textarea id="desc" placeholder="Descrição"></textarea>
-<input id="goal" type="number" placeholder="Meta">
+<div class="card">
 
-<button onclick="criar()">Criar</button>
+  <input id="title" placeholder="Título" class="input">
+
+  <textarea id="desc" placeholder="Descrição" class="input"></textarea>
+
+  <input id="goal" type="number" placeholder="Meta" class="input">
+
+  <button onclick="criar()">Criar</button>
+
+</div>
 
 <script type="module">
 import { supabase } from './supabase.js'
@@ -35,7 +42,7 @@ window.criar = async function() {
     user_id: user.user.id
   }])
 
-  alert("Criado!")
+  alert("Criado com sucesso!")
 }
 </script>
 
