@@ -1,13 +1,20 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Vaquinha</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<h1 id="title"></h1>
-<p id="description"></p>
-<p id="amount"></p>
+<div class="card">
+  <h1 id="title"></h1>
+  <p id="description"></p>
+  <p id="amount"></p>
+
+  <button id="copy">Copiar link</button>
+</div>
 
 <script type="module">
 import { supabase } from './supabase.js'
@@ -26,6 +33,11 @@ async function loadCampaign() {
   document.getElementById('description').innerText = data.description
   document.getElementById('amount').innerText =
     `R$ ${data.current_amount} / ${data.goal}`
+}
+
+document.getElementById('copy').onclick = () => {
+  navigator.clipboard.writeText(window.location.href)
+  alert("Link copiado!")
 }
 
 loadCampaign()
