@@ -1,36 +1,39 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Vaquinha</title>
+  <title>Campanha</title>
   <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
-<header class="header">
-  <h1>💰 Vaquinha</h1>
-</header>
+<div id="campanha"></div>
 
-<div class="card">
+<script type="module">
+import { supabase } from './supabase.js'
 
-  <h2 id="title"></h2>
-  <p id="description"></p>
+const params = new URLSearchParams(window.location.search)
+const id = params.get("id")
 
-  <p id="amount"></p>
+async function carregar() {
+  const { data } = await supabase
+    .from('campaigns')
+    .select('*')
+    .eq('id', id)
+    .single()
 
-  <!-- BARRA -->
-  <div class="progress-bar">
-    <div id="progress"></div>
-  </div>
+  campanha.innerHTML = `
+    <div class="card">
+      <h2>${data.title}</h2>
+      <p>${data.description}</p>
+      <p>R$ ${data.current_amount} / ${data.goal}</p>
+    </div>
+  `
+}
 
-  <!-- BOTÕES -->
-  <button id="pix" class="btn-main">Doar via PIX</button>
-  <button id="copy">Copiar link</button>
-
-</div>
-
-<script type="module" src="campaign.js"></script>
+carregar()
+</script>
 
 </body>
 </html>
