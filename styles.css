@@ -1,9 +1,3 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
 body {
   font-family: Arial, sans-serif;
   background-color: #0f0f0f;
@@ -11,26 +5,26 @@ body {
   padding: 15px;
 }
 
-h1, h2, h3 {
-  color: #ffffff;
-  margin-bottom: 10px;
+/* CARD CENTRAL */
+.card {
+  background-color: #1a1a1a;
+  padding: 20px;
+  border-radius: 12px;
+  margin-top: 20px;
 }
 
-p {
-  color: #d1d1d1;
-}
-
-input, textarea {
+/* INPUT PADRÃO */
+.input {
   width: 100%;
   padding: 12px;
-  margin: 8px 0;
+  margin-bottom: 10px;
   border-radius: 8px;
   border: none;
-  background-color: #1e1e1e;
+  background-color: #2a2a2a;
   color: #fff;
-  font-size: 16px;
 }
 
+/* BOTÃO */
 button {
   width: 100%;
   padding: 12px;
@@ -39,17 +33,4 @@ button {
   border: none;
   border-radius: 8px;
   font-size: 16px;
-  margin-top: 10px;
-}
-
-.card {
-  background-color: #1a1a1a;
-  padding: 15px;
-  margin-top: 15px;
-  border-radius: 12px;
-}
-
-a {
-  color: #4fc3f7;
-  text-decoration: none;
 }
