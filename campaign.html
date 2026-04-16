@@ -11,7 +11,12 @@
 <div class="card">
   <h1 id="title"></h1>
   <p id="description"></p>
+
   <p id="amount"></p>
+
+  <div class="progress-bar">
+    <div id="progress"></div>
+  </div>
 
   <button id="copy">Copiar link</button>
 </div>
@@ -31,8 +36,12 @@ async function loadCampaign() {
 
   document.getElementById('title').innerText = data.title
   document.getElementById('description').innerText = data.description
+
   document.getElementById('amount').innerText =
     `R$ ${data.current_amount} / ${data.goal}`
+
+  const percent = (data.current_amount / data.goal) * 100
+  document.getElementById('progress').style.width = percent + "%"
 }
 
 document.getElementById('copy').onclick = () => {
