@@ -58,7 +58,7 @@
 
 <div class="box hidden" id="painel">
   <h3>Bem-vindo ao painel</h3>
-  <button class="secondary" onclick="listar()">Ver Vaquinhas</button>
+  <button class="secondary" onclick="listar()">Atualizar Lista</button>
   <div id="lista"></div>
 </div>
 
@@ -79,7 +79,7 @@ window.entrar = function() {
 
 window.listar = async function() {
   const { data, error } = await supabase
-    .from('campanhas')
+    .from('campaigns')
     .select('*')
     .order('created_at', { ascending: false })
 
@@ -99,12 +99,12 @@ window.listar = async function() {
   data.forEach(item => {
     lista.innerHTML += `
       <div class="item-vaquinha">
-        <b>${item.titulo}</b>
+        <b>${item.title}</b>
         <div class="info">
-          Meta: R$ ${item.meta}<br>
-          Arrecadado: R$ ${item.valor_atual}
+          Meta: R$ ${item.goal}<br>
+          Arrecadado: R$ ${item.current_amount}
         </div>
-        <button class="delete" onclick="excluirVaquinha('${item.id}', '${item.titulo.replace(/'/g, "\\'")}')">Excluir</button>
+        <button class="delete" onclick="excluirVaquinha('${item.id}', '${item.title.replace(/'/g, "\\'")}')">Excluir</button>
       </div>
     `
   })
@@ -114,12 +114,12 @@ window.excluirVaquinha = async function(id, titulo) {
   const confirmar = confirm(`EXCLUIR PERMANENTEMENTE "${titulo}"?`)
   if (!confirmar) return
 
-  const { error, count } = await supabase
-    .from('campanhas')
+  const { error } = await supabase
+    .from('campaigns')
     .delete()
     .eq('id', id)
 
-  console.log('Delete:', { error, count })
+  console.log('Delete:', { error })
 
   if (error) {
     alert(`Erro ao excluir: ${error.message}`)
