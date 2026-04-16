@@ -2,19 +2,25 @@
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Criar Vaquinha</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <h1>Criar Vaquinha</h1>
 
-<form id="form">
-  <input type="text" id="title" placeholder="Título" required><br><br>
-  <textarea id="description" placeholder="Descrição"></textarea><br><br>
-  <input type="number" id="goal" placeholder="Meta (R$)" required><br><br>
+<div class="card">
+  <form id="form">
+    <input type="text" id="title" placeholder="Título" required class="input"><br><br>
+    
+    <textarea id="description" placeholder="Descrição" class="input"></textarea><br><br>
+    
+    <input type="number" id="goal" placeholder="Meta (R$)" required class="input"><br><br>
 
-  <button type="submit">Criar</button>
-</form>
+    <button type="submit">Criar</button>
+  </form>
+</div>
 
 <script type="module">
 import { supabase } from './supabase.js'
@@ -22,25 +28,33 @@ import { supabase } from './supabase.js'
 document.getElementById('form').addEventListener('submit', async (e) => {
   e.preventDefault()
 
+  const { data: userData } = await supabase.auth.getUser()
+  const user = userData.user
+
+  if (!user) {
+    alert("Faça login primeiro")
+    return
+  }
+
   const title = document.getElementById('title').value
   const description = document.getElementById('description').value
   const goal = document.getElementById('goal').value
 
-  const { error } = await supabase.from('campaigns').insert([
+  const { data, error } = await supabase.from('campaigns').insert([
     {
       title,
       description,
       goal,
-      current_amount: 0
+      current_amount: 0,
+      user_id: user.id
     }
-  ])
+  ]).select().single()
 
   if (error) {
-    alert('Erro ao criar')
+    alert("Erro ao criar")
     console.log(error)
   } else {
-    alert('Criado com sucesso!')
-    window.location.href = "index.html"
+    window.location.href = `campaign.html?id=${data.id}`
   }
 })
 </script>
