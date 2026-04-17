@@ -53,6 +53,7 @@
     }
     .loading { text-align: center; padding: 60px; color: #616161; }
     .erro { text-align: center; padding: 60px; color: #ff5252; }
+    small { color: #616161; font-size: 12px; display: block; margin-top: 4px; }
   </style>
 </head>
 <body>
@@ -99,23 +100,20 @@
 
         <div class="form-group">
           <label for="meta">Meta R$</label>
-          <input type="number" id="meta" required min="10" step="0.01">
+          <input type="text" id="meta" required placeholder="5.000,00" inputmode="decimal">
+          <small>Digite apenas números. Ex: 5000 ou 40.000</small>
         </div>
 
         <div class="form-group">
           <label for="valor-arrecadado">Valor arrecadado R$ *</label>
-          <input type="number" id="valor-arrecadado" required min="0" step="0.01">
-          <small style="color: #616161; font-size: 12px; display: block; margin-top: 4px;">
-            Atualize este valor conforme receber doações na sua conta
-          </small>
+          <input type="text" id="valor-arrecadado" required placeholder="0,00" inputmode="decimal">
+          <small>Atualize este valor conforme receber doações na sua conta</small>
         </div>
 
         <div class="form-group">
           <label for="pix-key">Chave Pix cadastrada</label>
           <input type="text" id="pix-key" disabled>
-          <small style="color: #616161; font-size: 12px; display: block; margin-top: 4px;">
-            Para alterar a chave Pix, você precisa criar uma nova vaquinha
-          </small>
+          <small>Para alterar a chave Pix, você precisa criar uma nova vaquinha</small>
         </div>
 
         <button type="submit" id="btn-salvar">Salvar alterações</button>
@@ -143,14 +141,31 @@ if (!id) {
   throw new Error('ID não informado')
 }
 
-// Checa login
+function formatarMoeda(input) {
+  let valor = input.value.replace(/\D/g, '')
+  if (!valor) {
+    input.value = ''
+    return
+  }
+  valor = (parseInt(valor) / 100).toFixed(2)
+  valor = valor.replace('.', ',')
+  valor = valor.replace(/\B(?=(\d{3})+(?!\d))/g, '.')
+  input.value = valor
+}
+
+function desformatarMoeda(valor) {
+  return Number(valor.replace(/\./g, '').replace(',', '.')) || 0
+}
+
+document.getElementById('meta').addEventListener('input', (e) => formatarMoeda(e.target))
+document.getElementById('valor-arrecadado').addEventListener('input', (e) => formatarMoeda(e.target))
+
 const { data: { user } } = await supabase.auth.getUser()
 if (!user) {
   window.location.href = 'index.html'
   throw new Error('Não logado')
 }
 
-// Busca vaquinha
 const { data: v, error } = await supabase
   .from('campaigns')
   .select('*')
@@ -162,13 +177,11 @@ if (error || !v) {
   throw new Error('Não encontrada')
 }
 
-// Checa se é o dono
 if (v.user_id !== user.id) {
   mostrarErro('Você não tem permissão para editar esta vaquinha')
   throw new Error('Sem permissão')
 }
 
-// Preenche formulário
 document.getElementById('loading').style.display = 'none'
 document.getElementById('conteudo').style.display = 'block'
 document.getElementById('titulo-atual').textContent = v.title
@@ -177,24 +190,33 @@ document.getElementById('valor-meta').textContent = Number(v.goal).toLocaleStrin
 
 document.getElementById('titulo').value = v.title
 document.getElementById('descricao').value = v.description || ''
-document.getElementById('meta').value = v.goal
-document.getElementById('valor-arrecadado').value = v.current_amount
+document.getElementById('meta').value = Number(v.goal).toLocaleString('pt-BR', {minimumFractionDigits: 2})
+document.getElementById('valor-arrecadado').value = Number(v.current_amount).toLocaleString('pt-BR', {minimumFractionDigits: 2})
 document.getElementById('pix-key').value = v.metadata?.pix_key || 'Não configurada'
 
-// Salvar alterações
 document.getElementById('form-editar').addEventListener('submit', async (e) => {
   e.preventDefault()
   const btn = document.getElementById('btn-salvar')
   btn.disabled = true
   btn.textContent = 'Salvando...'
 
+  const metaValor = desformatarMoeda(document.getElementById('meta').value)
+  const valorArrecadado = desformatarMoeda(document.getElementById('valor-arrecadado').value)
+
+  if (metaValor < 10) {
+    alert('A meta mínima é R$ 10,00')
+    btn.disabled = false
+    btn.textContent = 'Salvar alterações'
+    return
+  }
+
   const { error } = await supabase
     .from('campaigns')
     .update({
       title: document.getElementById('titulo').value,
       description: document.getElementById('descricao').value,
-      goal: parseFloat(document.getElementById('meta').value),
-      current_amount: parseFloat(document.getElementById('valor-arrecadado').value)
+      goal: metaValor,
+      current_amount: valorArrecadado
     })
     .eq('id', id)
 
@@ -208,7 +230,6 @@ document.getElementById('form-editar').addEventListener('submit', async (e) => {
   }
 })
 
-// Encerrar vaquinha
 window.encerrarVaquinha = async function() {
   if (!confirm('Tem certeza que deseja encerrar esta vaquinha? Ela será ocultada do dashboard.')) return
   
@@ -220,7 +241,7 @@ window.encerrarVaquinha = async function() {
   if (error) {
     alert('Erro ao encerrar: ' + error.message)
   } else {
-    alert('Vaquinha encerrada')
+    alert('Vaquinha encerrada!')
     window.location.href = 'dashboard.html'
   }
 }
