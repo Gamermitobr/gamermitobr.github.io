@@ -3,132 +3,130 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Criar Vaquinha</title>
+  <title>Criar Vaquinha - Vaquinha Online</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      background-color: #0a0a0a; color: #f1f1f1; font-family: 'Inter', sans-serif;
-      min-height: 100vh; padding: 20px;
+    body { background: #0a0a0a; color: #f1f1f1; font-family: 'Inter', sans-serif; }
+    .container { max-width: 600px; margin: 40px auto; padding: 20px; }
+    h1 { margin-bottom: 24px; }
+    .form-group { margin-bottom: 20px; }
+    label { display: block; margin-bottom: 6px; font-weight: 600; font-size: 14px; }
+    input, textarea, select {
+      width: 100%; padding: 12px; background: #121212; border: 1px solid #2a2a2a;
+      color: #f1f1f1; border-radius: 8px; font-family: inherit; font-size: 15px;
     }
-    .header {
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 0 0 30px 0; max-width: 500px; margin: 0 auto;
+    input:focus, textarea:focus, select:focus {
+      outline: 2px solid #00c853; outline-offset: 2px; border-color: #00c853;
     }
-    .header h1 { font-size: 20px; font-weight: 700; }
-    .header a { color: #9e9e9e; text-decoration: none; font-size: 14px; }
-    .header a:hover { color: #fff; }
-    .container { max-width: 500px; margin: 0 auto; }
-    .card {
-      background: #121212; padding: 32px; border-radius: 16px; border: 1px solid #1f1f1f;
+    fieldset {
+      border: 1px solid #1f1f1f; border-radius: 12px; padding: 20px; margin: 24px 0;
     }
-    h2 { font-size: 24px; margin-bottom: 8px; text-align: center; }
-    .subtitle { color: #9e9e9e; text-align: center; margin-bottom: 24px; font-size: 15px; }
-    label { display: block; margin-bottom: 6px; font-size: 14px; font-weight: 600; }
-    input, textarea {
-      width: 100%; padding: 14px; margin-bottom: 16px; border-radius: 10px;
-      border: 1px solid #2a2a2a; background-color: #1a1a1a; color: white;
-      font-size: 16px; font-family: 'Inter', sans-serif;
-    }
-    input:focus, textarea:focus { outline: none; border-color: #00c853; }
-    textarea { resize: vertical; min-height: 100px; }
+    legend { padding: 0 8px; color: #00c853; font-weight: 600; }
+    small { color: #616161; font-size: 12px; display: block; margin-top: 4px; }
     button {
-      width: 100%; padding: 16px; background: #00c853; color: #000;
-      border: none; border-radius: 10px; font-size: 16px; font-weight: 600; cursor: pointer;
+      width: 100%; padding: 14px; background: #00c853; color: #000; border: none;
+      border-radius: 10px; font-weight: 700; font-size: 16px; cursor: pointer;
+      transition: all 0.2s;
     }
-    button:hover { background: #00e676; }
-    button:disabled { background: #2a2a2a; color: #616161; cursor: not-allowed; }
-    .alert { padding: 14px; border-radius: 10px; margin-bottom: 16px; text-align: center; font-size: 14px; }
-    .alert.error { background: #4a1515; color: #ff5252; }
-    .alert.success { background: #0d3d1f; color: #00e676; }
-    .hidden { display: none; }
+    button:hover { background: #00e676; transform: translateY(-1px); }
+    button:disabled { background: #333; color: #666; cursor: not-allowed; }
   </style>
 </head>
 <body>
-
-<div class="header">
-  <h1>💰 Vaquinha Online</h1>
-  <a href="dashboard.html">← Voltar</a>
-</div>
-
 <div class="container">
-  <div class="card">
-    <h2>Criar nova vaquinha</h2>
-    <p class="subtitle">Preencha os dados abaixo pra começar a receber ajuda</p>
+  <h1>💰 Criar nova vaquinha</h1>
+  
+  <form id="form-vaquinha">
+    <div class="form-group">
+      <label for="titulo">Título da vaquinha *</label>
+      <input type="text" id="titulo" required maxlength="100" placeholder="Ex: Ajuda pro tratamento do Bob">
+    </div>
 
-    <div id="alerta" class="alert hidden"></div>
+    <div class="form-group">
+      <label for="descricao">Descrição</label>
+      <textarea id="descricao" rows="4" maxlength="500" placeholder="Conte sua história"></textarea>
+    </div>
 
-    <label for="title">Título da vaquinha</label>
-    <input id="title" type="text" placeholder="Ex: Ajuda para cirurgia do meu pet">
+    <div class="form-group">
+      <label for="meta">Meta de arrecadação R$ *</label>
+      <input type="number" id="meta" required min="10" step="0.01" placeholder="5000.00">
+    </div>
 
-    <label for="desc">Descrição</label>
-    <textarea id="desc" placeholder="Conte sua história e explique por que precisa de ajuda"></textarea>
+    <fieldset>
+      <legend>Dados para receber as doações</legend>
+      
+      <div class="form-group">
+        <label for="pix-key-type">Tipo da sua chave Pix *</label>
+        <select id="pix-key-type" required>
+          <option value="">Selecione</option>
+          <option value="CPF">CPF</option>
+          <option value="EMAIL">E-mail</option>
+          <option value="PHONE">Celular</option>
+          <option value="EVP">Chave aleatória</option>
+        </select>
+      </div>
 
-    <label for="goal">Meta de arrecadação (R$)</label>
-    <input id="goal" type="number" placeholder="Ex: 5000" min="1" step="0.01">
+      <div class="form-group">
+        <label for="pix-key">Sua chave Pix *</label>
+        <input type="text" id="pix-key" required placeholder="Digite sem pontos, traços ou espaços">
+        <small>O valor das doações vai direto pra esta conta</small>
+      </div>
 
-    <label for="pix">Sua chave PIX</label>
-    <input id="pix" type="text" placeholder="CPF, email, telefone ou chave aleatória">
+      <div class="form-group">
+        <label for="beneficiary-name">Nome completo do titular *</label>
+        <input type="text" id="beneficiary-name" required maxlength="25" placeholder="Igual está no banco">
+        <small>Máx 25 caracteres - regra do Pix</small>
+      </div>
 
-    <button id="btn-criar" onclick="criar()">Criar vaquinha</button>
-  </div>
+      <div class="form-group">
+        <label for="beneficiary-city">Cidade do titular *</label>
+        <input type="text" id="beneficiary-city" required maxlength="15" placeholder="Ex: Taiobeiras">
+        <small>Máx 15 caracteres - regra do Pix</small>
+      </div>
+    </fieldset>
+
+    <button type="submit" id="btn-criar">Criar vaquinha</button>
+  </form>
 </div>
 
 <script type="module">
 import { supabase } from './supabase.js'
 
-// VERIFICA LOGIN ANTES DE CARREGAR A PÁGINA
 const { data: { user } } = await supabase.auth.getUser()
-if (!user) {
-  window.location.replace('login.html') // replace não deixa voltar pelo histórico
-  throw new Error('Redirecting to login')
-}
+if (!user) window.location.href = 'index.html'
 
-// Se chegou aqui, tá logado
-const alerta = document.getElementById('alerta')
-const btnCriar = document.getElementById('btn-criar')
+document.getElementById('form-vaquinha').addEventListener('submit', async (e) => {
+  e.preventDefault()
+  const btn = document.getElementById('btn-criar')
+  btn.disabled = true
+  btn.textContent = 'Criando...'
 
-function mostrarAlerta(msg, tipo = 'error') {
-  alerta.textContent = msg
-  alerta.className = `alert ${tipo}`
-  alerta.classList.remove('hidden')
-}
+  const pixData = {
+    pix_key: document.getElementById('pix-key').value.replace(/\D/g,''),
+    pix_key_type: document.getElementById('pix-key-type').value,
+    beneficiary_name: document.getElementById('beneficiary-name').value.trim(),
+    beneficiary_city: document.getElementById('beneficiary-city').value.trim()
+  }
 
-window.criar = async function() {
-  const title = document.getElementById('title').value.trim()
-  const desc = document.getElementById('desc').value.trim()
-  const goal = document.getElementById('goal').value
-  const pix = document.getElementById('pix').value.trim()
-
-  if (!title) return mostrarAlerta('Coloca um título pra sua vaquinha')
-  if (!goal || goal <= 0) return mostrarAlerta('Coloca uma meta válida maior que zero')
-  if (!pix) return mostrarAlerta('Coloca sua chave PIX pra receber as doações')
-  
-  btnCriar.disabled = true
-  btnCriar.textContent = 'Criando...'
-  alerta.classList.add('hidden')
-
-  const { error } = await supabase.from('campaigns').insert([{
-    title: title,
-    description: desc,
-    goal: goal,
+  const { error } = await supabase.from('campaigns').insert({
+    title: document.getElementById('titulo').value,
+    description: document.getElementById('descricao').value,
+    goal: parseFloat(document.getElementById('meta').value),
+    user_id: user.id,
     current_amount: 0,
-    pix_key: pix,
-    user_id: user.id
-  }])
+    status: 'active',
+    metadata: pixData
+  })
 
   if (error) {
-    mostrarAlerta('Erro ao criar: ' + error.message)
-    btnCriar.disabled = false
-    btnCriar.textContent = 'Criar vaquinha'
+    alert('Erro ao criar: ' + error.message)
+    btn.disabled = false
+    btn.textContent = 'Criar vaquinha'
   } else {
-    mostrarAlerta('Vaquinha criada com sucesso!', 'success')
-    setTimeout(() => {
-      window.location.replace('dashboard.html')
-    }, 1500)
+    window.location.href = 'dashboard.html'
   }
-}
+})
 </script>
-
 </body>
 </html>
