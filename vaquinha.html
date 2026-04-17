@@ -3,337 +3,225 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <title id="meta-title">Vaquinha Online</title>
-  <meta name="description" id="meta-desc" content="Contribua com essa vaquinha">
-  <meta property="og:type" content="website">
-  <meta property="og:title" id="og-title" content="Vaquinha Online">
-  <meta property="og:description" id="og-desc" content="Contribua com essa vaquinha">
-  <meta property="og:image" content="https://i.imgur.com/8QqZz8z.png">
-  <meta property="og:url" content="">
-  <meta name="twitter:card" content="summary_large_image">
-  
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <title>Vaquinha Online</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
-    :root {
-      --bg: #0a0a0a;
-      --bg-elevated: #121212;
-      --bg-card: #0f0f0f;
-      --border: #1f1f1f;
-      --text: #f1f1f1;
-      --text-muted: #9e9e9e;
-      --primary: #00c853;
-      --primary-hover: #00e676;
-      --radius: 20px;
-    }
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { 
-      background: linear-gradient(180deg, #0a0a0a 0%, #0f0f0f 100%); 
-      color: var(--text); font-family: 'Inter', sans-serif; line-height: 1.6; min-height: 100vh;
+    body { background: #0a0a0a; color: #f1f1f1; font-family: 'Inter', sans-serif; }
+    .header { text-align: center; padding: 24px 20px; background: #0f0f0f; border-bottom: 1px solid #1a1a1a; }
+    .header h1 { font-size: 22px; font-weight: 700; }
+    .container { max-width: 500px; margin: 40px auto; padding: 0 20px; }
+    .card { background: #121212; border: 1px solid #1f1f1f; border-radius: 16px; padding: 32px; margin-bottom: 20px; text-align: center; }
+    h2 { margin-bottom: 8px; font-size: 24px; }
+    .subtitle { color: #9e9e9e; margin-bottom: 24px; font-size: 14px; }
+    .progress-bar { background: #2a2a2a; height: 10px; border-radius: 5px; margin: 24px 0 12px; overflow: hidden; }
+    .progress { background: #00c853; height: 100%; border-radius: 5px; transition: width 0.5s; }
+    .values { display: flex; justify-content: space-between; font-size: 15px; margin-bottom: 24px; }
+    .values b { color: #00c853; }
+    .descricao { color: #9e9e9e; font-size: 15px; line-height: 1.6; margin-bottom: 24px; text-align: left; }
+    .form-group { margin-bottom: 20px; text-align: left; }
+    label { display: block; margin-bottom: 6px; font-weight: 600; font-size: 14px; }
+    input {
+      width: 100%; padding: 14px; background: #0a0a0a; border: 1px solid #2a2a2a;
+      color: #f1f1f1; border-radius: 8px; font-family: inherit; font-size: 16px;
     }
-    .header {
-      display: flex; justify-content: center; align-items: center; padding: 20px 5%;
-      background: rgba(15, 15, 15, 0.8); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border); 
-      position: sticky; top: 0; z-index: 10;
-    }
-    .header h1 { font-size: 20px; font-weight: 800; }
-    .header h1 a { color: var(--text); text-decoration: none; }
-    .container { max-width: 700px; margin: 40px auto; padding: 20px; }
-    .hero-card { 
-      background: var(--bg-elevated); border: 1px solid var(--border); border-radius: var(--radius); 
-      padding: 40px 32px; margin-bottom: 24px; text-align: center;
-    }
-    .emoji-grande { font-size: 64px; margin-bottom: 16px; display: block; }
-    h1 { font-size: clamp(26px, 5vw, 36px); margin-bottom: 12px; word-break: break-word; font-weight: 800; line-height: 1.2; }
-    .descricao { color: var(--text-muted); margin-bottom: 32px; white-space: pre-wrap; font-size: 16px; }
-    .progress-section { margin: 32px 0; }
-    .progress-bar { background: #2a2a2a; height: 14px; border-radius: 7px; margin-bottom: 12px; overflow: hidden; }
-    .progress { background: linear-gradient(90deg, var(--primary) 0%, var(--primary-hover) 100%); height: 100%; border-radius: 7px; transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1); }
-    .values { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 18px; gap: 16px; flex-wrap: wrap; }
-    .values .label { font-size: 13px; color: var(--text-muted); display: block; margin-bottom: 4px; }
-    .values b { color: var(--primary); font-size: 24px; font-weight: 800; }
-    .porcentagem { text-align: center; color: var(--primary); font-weight: 700; font-size: 16px; }
-    .doacao-card { 
-      background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); 
-      padding: 32px; box-shadow: 0 8px 32px rgba(0,0,0,0.4);
-    }
-    .doacao-card h3 { margin-bottom: 8px; font-size: 22px; font-weight: 700; }
-    .beneficiario { color: var(--text-muted); margin-bottom: 24px; font-size: 15px; }
-    .beneficiario b { color: var(--text); font-weight: 600; }
-    .input-group { margin-bottom: 16px; }
-    .input-group label { display: block; margin-bottom: 8px; font-weight: 600; font-size: 14px; }
-    input[type="number"] {
-      width: 100%; padding: 16px; background: var(--bg-elevated); border: 2px solid #2a2a2a;
-      color: var(--text); border-radius: 12px; font-size: 18px; font-family: inherit; font-weight: 600;
-      transition: all 0.2s;
-    }
-    input[type="number"]:focus { outline: none; border-color: var(--primary); background: #0a0a0a; }
+    input:focus { outline: 2px solid #00c853; outline-offset: 2px; border-color: #00c853; }
     button {
-      width: 100%; padding: 16px; background: var(--primary); color: #000; border: none;
-      border-radius: 12px; font-weight: 800; font-size: 17px; cursor: pointer; transition: all 0.2s; font-family: inherit;
+      width: 100%; padding: 16px; background: #00c853; color: #000; border: none;
+      border-radius: 10px; font-weight: 700; font-size: 16px; cursor: pointer; transition: all 0.2s;
     }
-    button:hover, button:focus-visible { background: var(--primary-hover); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,200,83,0.3); }
-    button.secondary { background: #2a2a2a; color: var(--text); margin-top: 12px; font-weight: 600; }
-    button.secondary:hover { background: #333; box-shadow: none; transform: none; }
-    #area-pix { text-align: center; margin-top: 28px; padding-top: 28px; border-top: 1px solid var(--border); }
-    #qr-code-img { border-radius: 16px; border: 2px solid var(--border); margin: 20px 0; max-width: 100%; background: white; padding: 16px; }
-    textarea {
-      width: 100%; padding: 14px; background: var(--bg); border: 1px solid #2a2a2a;
-      color: var(--text); border-radius: 10px; font-family: monospace; font-size: 12px; resize: none;
+    button:hover { background: #00e676; transform: translateY(-1px); }
+    button:disabled { background: #333; color: #666; cursor: not-allowed; }
+    .qr-area { margin-top: 24px; display: none; }
+    .qr-area img { max-width: 250px; margin: 16px auto; border: 8px solid #fff; border-radius: 12px; }
+    .pix-code {
+      background: #0a0a0a; border: 1px solid #2a2a2a; border-radius: 8px;
+      padding: 12px; font-size: 12px; word-break: break-all; color: #9e9e9e; margin: 16px 0;
     }
-    .aviso { color: var(--text-muted); font-size: 13px; margin-top: 16px; line-height: 1.6; background: #0a0a0a; padding: 16px; border-radius: 10px; }
-    .aviso b { color: var(--text); }
-    .compartilhar { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 24px; }
-    .compartilhar button { font-size: 15px; padding: 12px; font-weight: 700; }
-    .btn-editar {
-      display: block; text-align: center; margin-top: 20px; padding: 14px; background: #2a2a2a;
-      border-radius: 12px; color: var(--text); text-decoration: none; font-weight: 700;
-      border: 1px solid #3a3a3a; transition: all 0.2s;
-    }
-    .btn-editar:hover { background: #333; border-color: #444; }
-    .loading { text-align: center; padding: 80px 20px; color: var(--text-muted); }
-    .erro { background: #2a0a0a; border: 1px solid #ff5252; color: #ff8a80; padding: 16px; border-radius: 12px; margin: 20px; white-space: pre-wrap; word-break: break-word; }
-    .footer { text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 13px; }
-    .footer a { color: var(--primary); text-decoration: none; }
-    @media (max-width: 640px) {
-      .container { padding: 16px; margin: 20px auto; }
-      .hero-card, .doacao-card { padding: 24px 20px; }
-      .values b { font-size: 20px; }
-      .compartilhar { grid-template-columns: 1fr; }
-    }
+    .btn-sec { background: #2a2a2a; color: #f1f1f1; margin-top: 12px; }
+    .btn-sec:hover { background: #333; }
+    .loading { text-align: center; padding: 60px; color: #616161; }
+    .erro { text-align: center; padding: 60px; color: #ff5252; }
+    .beneficiario { font-weight: 700; color: #f1f1f1; }
   </style>
 </head>
 <body>
 
-<header class="header">
-  <h1><a href="index.html">💰 Vaquinha Online</a></h1>
-</header>
+<div class="header">
+  <h1>💰 Vaquinha Online</h1>
+</div>
 
 <div class="container">
-  <div id="loading" class="loading">Carregando vaquinha...</div>
+  <div id="loading" class="loading">Carregando...</div>
   <div id="erro" class="erro" style="display:none;"></div>
   
   <div id="conteudo" style="display:none;">
-    <div class="hero-card">
-      <span class="emoji-grande">💚</span>
-      <h1 id="titulo-vaquinha"></h1>
-      <p class="descricao" id="descricao-vaquinha"></p>
+    <div class="card">
+      <h2 id="titulo"></h2>
+      <p class="subtitle" id="criado-por"></p>
       
-      <div class="progress-section">
-        <div class="values">
-          <div>
-            <span class="label">Arrecadado</span>
-            <b id="valor-arrecadado">R$ 0,00</b>
-          </div>
-          <div>
-            <span class="label">Meta</span>
-            <b id="valor-meta">R$ 0,00</b>
-          </div>
-        </div>
-        <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100">
-          <div class="progress" id="barra-progresso" style="width: 0%"></div>
-        </div>
-        <div class="porcentagem" id="porcentagem">0% concluído</div>
+      <div class="descricao" id="descricao"></div>
+      
+      <div class="progress-bar">
+        <div class="progress" id="progress"></div>
       </div>
-      
-      <div id="btn-editar-container"></div>
+      <div class="values">
+        <span><b id="arrecadado">R$ 0,00</b> arrecadados</span>
+        <span>Meta: <b id="meta">R$ 0,00</b></span>
+      </div>
     </div>
 
-    <div class="doacao-card">
-      <h3>💳 Faça sua doação</h3>
-      <p class="beneficiario">O valor vai direto pra conta de <b id="nome-beneficiario">-</b></p>
+    <div class="card">
+      <h2>💳 Faça sua doação</h2>
+      <p class="subtitle">O valor vai direto pra conta de <span class="beneficiario" id="beneficiario"></span></p>
       
-      <div id="pix-configurado">
-        <div class="input-group">
-          <label for="valor-doacao">Qual valor você quer doar?</label>
-          <input type="number" id="valor-doacao" placeholder="R$ 50,00" step="0.01" min="1" inputmode="decimal">
-        </div>
-        <button onclick="gerarQrCode()">Gerar QR Code Pix</button>
-
-        <div id="area-pix" style="display:none;">
-          <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 8px;">Escaneie com o app do seu banco</p>
-          <img id="qr-code-img" width="300" alt="QR Code para pagamento via Pix">
-          <p style="color: var(--text-muted); font-size: 13px; margin: 16px 0 8px;">Ou use o Pix Copia e Cola:</p>
-          <textarea id="pix-copia-cola" readonly rows="4" aria-label="Código Pix Copia e Cola"></textarea>
-          <button class="secondary" onclick="copiarPix()">📋 Copiar código Pix</button>
-          <div class="aviso">
-            Após pagar, avise <b id="nome-aviso"></b> pra atualizar o valor aqui no site. 
-            Assim todo mundo acompanha o progresso em tempo real.
-          </div>
-        </div>
+      <div class="form-group">
+        <label for="valor">Valor da doação R$</label>
+        <input type="text" id="valor" placeholder="50,00" inputmode="decimal">
       </div>
 
-      <div id="pix-nao-configurado" style="display:none;">
-        <p style="color: #ff5252; text-align: center; padding: 20px;">
-          O criador ainda não configurou uma chave Pix para receber doações.
-        </p>
-      </div>
+      <button onclick="gerarPix()">Gerar QR Code Pix</button>
 
-      <div class="compartilhar">
-        <button class="secondary" onclick="compartilharWhatsApp()">📱 Compartilhar no WhatsApp</button>
-        <button class="secondary" onclick="copiarLink()">🔗 Copiar link</button>
+      <div class="qr-area" id="qr-area">
+        <img id="qr-img" alt="QR Code Pix">
+        <div class="pix-code" id="pix-code"></div>
+        <button class="btn-sec" onclick="copiarPix()">📋 Copiar código Pix</button>
+        <button class="btn-sec" onclick="compartilharWhatsApp()">📱 Compartilhar no WhatsApp</button>
       </div>
+    </div>
+
+    <div class="card" style="text-align: center;">
+      <button class="btn-sec" onclick="copiarLink()">🔗 Copiar link</button>
+      <p style="margin-top: 20px; color: #616161; font-size: 13px;">
+        Feito com 💚 no Vaquinha Online
+      </p>
     </div>
   </div>
 </div>
 
-<footer class="footer">
-  Feito com 💚 no <a href="index.html">Vaquinha Online</a>
-</footer>
-
+<!-- Importa a lib correta do Pix -->
+<script src="https://cdn.jsdelivr.net/npm/qrcode-pix@3.0.0/dist/qrcode-pix.min.js"></script>
 <script type="module">
 import { supabase } from './supabase.js'
 
-let QrCodePix = null
-let QRCode = null
+const urlParams = new URLSearchParams(window.location.search)
+const id = urlParams.get('id')
 
-function mostrarErro(titulo, detalhe) {
+if (!id) {
+  mostrarErro('Link inválido')
+  throw new Error('ID não informado')
+}
+
+let vaquinha = null
+let pixCode = ''
+
+function formatarMoeda(input) {
+  let valor = input.value.replace(/\D/g, '')
+  if (!valor) {
+    input.value = ''
+    return
+  }
+  valor = (parseInt(valor) / 100).toFixed(2)
+  valor = valor.replace('.', ',')
+  valor = valor.replace(/\B(?=(\d{3})+(?!\d))/g, '.')
+  input.value = valor
+}
+
+function desformatarMoeda(valor) {
+  return Number(valor.replace(/\./g, '').replace(',', '.')) || 0
+}
+
+document.getElementById('valor').addEventListener('input', (e) => formatarMoeda(e.target))
+
+const { data: v, error } = await supabase
+  .from('campaigns')
+  .select('*')
+  .eq('id', id)
+  .single()
+
+if (error || !v) {
+  mostrarErro('Vaquinha não encontrada')
+  throw new Error('Não encontrada')
+}
+
+if (v.status !== 'active') {
+  mostrarErro('Esta vaquinha foi encerrada e não aceita mais doações.')
+  throw new Error('Vaquinha encerrada')
+}
+
+vaquinha = v
+
+document.getElementById('loading').style.display = 'none'
+document.getElementById('conteudo').style.display = 'block'
+
+document.getElementById('titulo').textContent = v.title
+document.getElementById('descricao').textContent = v.description || 'Sem descrição'
+document.getElementById('beneficiario').textContent = v.metadata?.beneficiary_name || 'Beneficiário'
+
+const pct = v.goal > 0 ? Math.min((v.current_amount / v.goal) * 100, 100) : 0
+document.getElementById('progress').style.width = pct + '%'
+document.getElementById('arrecadado').textContent = Number(v.current_amount).toLocaleString('pt-BR', {style:'currency',currency:'BRL'})
+document.getElementById('meta').textContent = Number(v.goal).toLocaleString('pt-BR', {style:'currency',currency:'BRL'})
+
+window.gerarPix = async function() {
+  const valor = desformatarMoeda(document.getElementById('valor').value)
+  
+  if (valor < 1) {
+    alert('Valor mínimo é R$ 1,00')
+    return
+  }
+
+  try {
+    const meta = vaquinha.metadata
+    
+    if (!meta?.pix_key || !meta?.beneficiary_name || !meta?.beneficiary_city) {
+      alert('Esta vaquinha não tem dados de Pix configurados')
+      return
+    }
+
+    // Usa a lib QrCodePix correta
+    const qr = QrCodePix({
+      version: '01',
+      key: meta.pix_key,
+      name: meta.beneficiary_name.substring(0, 25),
+      city: meta.beneficiary_city.substring(0, 15),
+      transactionId: '***',
+      message: vaquinha.title.substring(0, 50),
+      value: valor
+    })
+
+    pixCode = qr.payload()
+    const qrImg = await qr.base64()
+    
+    document.getElementById('qr-img').src = qrImg
+    document.getElementById('pix-code').textContent = pixCode
+    document.getElementById('qr-area').style.display = 'block'
+    
+  } catch (err) {
+    alert('Erro ao gerar QR Code: ' + err.message)
+    console.error(err)
+  }
+}
+
+window.copiarPix = function() {
+  navigator.clipboard.writeText(pixCode)
+  alert('Código Pix copiado!')
+}
+
+window.copiarLink = function() {
+  navigator.clipboard.writeText(window.location.href)
+  alert('Link copiado!')
+}
+
+window.compartilharWhatsApp = function() {
+  const texto = `Ajude na vaquinha: ${vaquinha.title}\n\n${window.location.href}`
+  window.open(`https://wa.me/?text=${encodeURIComponent(texto)}`, '_blank')
+}
+
+function mostrarErro(msg) {
   document.getElementById('loading').style.display = 'none'
   document.getElementById('erro').style.display = 'block'
-  document.getElementById('erro').innerHTML = `<b>${titulo}</b>\n\n${detalhe}`
-}
-
-async function carregarBibliotecasPix() {
-  try {
-    const pixModule = await import('https://cdn.jsdelivr.net/npm/pix-qrcode@1.0.0/+esm')
-    QrCodePix = pixModule.QrCodePix
-    const qrModule = await import('https://cdn.jsdelivr.net/npm/qrcode@1.5.3/+esm')
-    QRCode = qrModule.default
-    return true
-  } catch (e) {
-    console.error('Erro ao carregar bibliotecas Pix:', e)
-    return false
-  }
-}
-
-try {
-  const urlParams = new URLSearchParams(window.location.search)
-  const id = urlParams.get('id')
-
-  if (!id) {
-    mostrarErro('Link inválido', 'Não achei o ID da vaquinha na URL')
-    throw new Error('Sem ID')
-  }
-
-  const { data: v, error } = await supabase
-    .from('campaigns')
-    .select('*')
-    .eq('id', id)
-    .single()
-
-  if (error) {
-    mostrarErro('Erro do Supabase', JSON.stringify(error, null, 2))
-    throw error
-  }
-  
-  if (!v) {
-    mostrarErro('Vaquinha não encontrada', 'O banco retornou vazio')
-    throw new Error('Não encontrada')
-  }
-
-  const pix = v.metadata || {}
-  const metaValor = Number(v.goal) || 0
-  const valorAtual = Number(v.current_amount) || 0
-  const pct = metaValor > 0 ? Math.min((valorAtual / metaValor) * 100, 100) : 0
-  const urlCompleta = window.location.href
-
-  document.getElementById('meta-title').textContent = v.title + ' - Vaquinha Online'
-  document.getElementById('meta-desc').setAttribute('content', `Meta: ${metaValor.toLocaleString('pt-BR', {style:'currency',currency:'BRL'})} | ${pct.toFixed(0)}% arrecadado`)
-  document.getElementById('og-title').setAttribute('content', v.title)
-  document.getElementById('og-desc').setAttribute('content', v.description || `Meta de ${metaValor.toLocaleString('pt-BR', {style:'currency',currency:'BRL'})}`)
-  document.querySelector('meta[property="og:url"]').setAttribute('content', urlCompleta)
-
-  document.title = v.title + ' - Vaquinha Online'
-  document.getElementById('titulo-vaquinha').textContent = v.title
-  document.getElementById('descricao-vaquinha').textContent = v.description || 'Toda ajuda é bem-vinda!'
-  document.getElementById('valor-arrecadado').textContent = valorAtual.toLocaleString('pt-BR', {style:'currency',currency:'BRL'})
-  document.getElementById('valor-meta').textContent = metaValor.toLocaleString('pt-BR', {style:'currency',currency:'BRL'})
-  document.getElementById('barra-progresso').style.width = pct + '%'
-  document.getElementById('barra-progresso').parentElement.setAttribute('aria-valuenow', pct.toFixed(0))
-  document.getElementById('porcentagem').textContent = pct.toFixed(1) + '% da meta atingida'
-  document.getElementById('nome-beneficiario').textContent = pix.beneficiary_name || 'o criador'
-  document.getElementById('nome-aviso').textContent = pix.beneficiary_name || 'o criador'
-
-  if (!pix.pix_key) {
-    document.getElementById('pix-configurado').style.display = 'none'
-    document.getElementById('pix-nao-configurado').style.display = 'block'
-  }
-
-  const { data: { user } } = await supabase.auth.getUser()
-  if (user && user.id === v.user_id) {
-    document.getElementById('btn-editar-container').innerHTML = `
-      <a href="editar-vaquinha.html?id=${id}" class="btn-editar">
-        ⚙️ Gerenciar minha vaquinha
-      </a>
-    `
-  }
-
-  document.getElementById('loading').style.display = 'none'
-  document.getElementById('conteudo').style.display = 'block'
-
-  window.gerarQrCode = async function() {
-    const valor = parseFloat(document.getElementById('valor-doacao').value)
-    if (!valor || valor <= 0) return alert('Digite um valor válido maior que zero')
-    if (!pix.pix_key) return alert('Criador não configurou chave Pix')
-
-    if (!QrCodePix || !QRCode) {
-      const carregou = await carregarBibliotecasPix()
-      if (!carregou) {
-        alert('Erro ao carregar bibliotecas do Pix. Tenta recarregar a página.')
-        return
-      }
-    }
-
-    try {
-      const qrCodePix = QrCodePix({
-        version: '01',
-        key: pix.pix_key,
-        name: (pix.beneficiary_name || 'Beneficiario').substring(0, 25),
-        city: (pix.beneficiary_city || 'Cidade').substring(0, 15),
-        transactionId: `VQ${v.id.replace(/-/g,'').substring(0, 10)}`,
-        message: `Doacao ${v.title}`.substring(0, 40),
-        value: valor
-      })
-
-      const payload = qrCodePix.payload()
-      const qrCodeURL = await QRCode.toDataURL(payload, { width: 300, margin: 1, errorCorrectionLevel: 'M' })
-
-      document.getElementById('qr-code-img').src = qrCodeURL
-      document.getElementById('pix-copia-cola').value = payload
-      document.getElementById('area-pix').style.display = 'block'
-      document.getElementById('area-pix').scrollIntoView({ behavior: 'smooth', block: 'nearest' })
-    } catch (e) {
-      alert('Erro ao gerar QR Code: ' + e.message)
-      console.error(e)
-    }
-  }
-
-  window.copiarPix = function() {
-    const textarea = document.getElementById('pix-copia-cola')
-    textarea.select()
-    navigator.clipboard.writeText(textarea.value)
-    event.target.textContent = '✓ Copiado!'
-    setTimeout(() => { event.target.textContent = '📋 Copiar código Pix' }, 2000)
-  }
-
-  window.compartilharWhatsApp = function() {
-    const texto = `💚 ${v.title}\n\n${v.description || ''}\n\nMeta: ${metaValor.toLocaleString('pt-BR', {style:'currency',currency:'BRL'})}\nArrecadado: ${pct.toFixed(0)}%\n\nDoe aqui: ${urlCompleta}`
-    window.open(`https://wa.me/?text=${encodeURIComponent(texto)}`, '_blank')
-  }
-
-  window.copiarLink = function() {
-    navigator.clipboard.writeText(urlCompleta)
-    event.target.textContent = '✓ Link copiado!'
-    setTimeout(() => { event.target.textContent = '🔗 Copiar link' }, 2000)
-  }
-
-} catch (e) {
-  console.error(e)
-  if (!document.getElementById('erro').style.display.includes('block')) {
-    mostrarErro('Erro desconhecido', e.message || e.toString())
-  }
+  document.getElementById('erro').textContent = msg
 }
 </script>
 
