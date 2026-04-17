@@ -3,17 +3,139 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Vaquinha Online</title>
+  <title>Vaquinha Online - Crie sua campanha</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 
-  <!-- CSS principal -->
-  <link rel="stylesheet" href="style.css">
-
-  <!-- GARANTE FUNDO ESCURO MESMO SEM CSS -->
   <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
     body {
-      background-color: #0f0f0f;
+      background-color: #0a0a0a;
       color: #f1f1f1;
-      font-family: Arial, sans-serif;
+      font-family: 'Inter', Arial, sans-serif;
+      line-height: 1.6;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 5%;
+      background: rgba(15, 15, 15, 0.8);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid #1a1a1a;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .header h1 {
+      font-size: 22px;
+      font-weight: 700;
+    }
+
+    #auth-area a, #auth-area button {
+      color: #f1f1f1;
+      text-decoration: none;
+      background: #2a2a2a;
+      padding: 8px 16px;
+      border-radius: 8px;
+      border: 1px solid #3a3a3a;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    #auth-area a:hover {
+      background: #333;
+    }
+
+    .hero {
+      text-align: center;
+      padding: 100px 20px 80px 20px;
+      background: radial-gradient(circle at 50% 0%, #003d1f 0%, #0a0a0a 60%);
+    }
+
+    .hero h2 {
+      font-size: 48px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      background: linear-gradient(180deg, #fff 0%, #bdbdbd 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero p {
+      font-size: 18px;
+      color: #9e9e9e;
+      margin-bottom: 32px;
+      max-width: 500px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .btn-main {
+      display: inline-block;
+      padding: 16px 32px;
+      background: linear-gradient(180deg, #00e676 0%, #00c853 100%);
+      color: #000;
+      text-decoration: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      box-shadow: 0 4px 20px rgba(0, 200, 83, 0.3);
+      transition: transform 0.2s;
+    }
+
+    .btn-main:hover {
+      transform: translateY(-2px);
+    }
+
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      padding: 60px 5%;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .feature {
+      background: #121212;
+      padding: 32px 24px;
+      border-radius: 16px;
+      border: 1px solid #1f1f1f;
+      text-align: center;
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .feature-icon {
+      font-size: 36px;
+      margin-bottom: 16px;
+      display: block;
+    }
+
+    footer {
+      text-align: center;
+      padding: 40px 20px;
+      border-top: 1px solid #1a1a1a;
+      color: #616161;
+      font-size: 14px;
+    }
+
+    @media (max-width: 600px) {
+      .hero h2 {
+        font-size: 36px;
+      }
+      .header {
+        padding: 15px 20px;
+      }
     }
   </style>
 </head>
@@ -32,20 +154,23 @@
 
 <section class="hero">
   <h2>Crie sua vaquinha em segundos</h2>
-  <p>Compartilhe o link e receba ajuda de qualquer pessoa.</p>
+  <p>Compartilhe o link com amigos e receba ajuda de qualquer pessoa via PIX, de forma rápida e segura.</p>
 
   <a href="create.html" class="btn-main">Criar minha vaquinha</a>
 </section>
 
 <section class="features">
   <div class="feature">
-    ⚡ Rápido
+    <span class="feature-icon">⚡</span>
+    Rápido e simples
   </div>
   <div class="feature">
-    🔗 Link único
+    <span class="feature-icon">🔗</span>
+    Link único pra compartilhar
   </div>
   <div class="feature">
-    💸 Receba via PIX
+    <span class="feature-icon">💸</span>
+    Receba direto via PIX
   </div>
 </section>
 
