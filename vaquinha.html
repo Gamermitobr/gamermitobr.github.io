@@ -9,14 +9,28 @@
       background-color: #000000;
       color: #a0a0a0;
       font-family: Arial, sans-serif;
-      padding: 40px 20px;
-      text-align: center;
+      padding: 0;
       margin: 0;
+      text-align: center;
+    }
+
+    .header {
+      padding: 20px;
+      border-bottom: 1px solid #1a1a1a;
+      margin-bottom: 30px;
+    }
+
+    .header h2 {
+      color: #ffffff;
+      font-size: 20px;
+      margin: 0;
+      font-weight: 700;
     }
 
     .container {
       max-width: 500px;
       margin: auto;
+      padding: 0 20px 40px 20px;
     }
 
     h1 {
@@ -126,6 +140,10 @@
 </head>
 <body>
 
+<div class="header">
+  <h2>💰 Vaquinha Online</h2>
+</div>
+
 <div class="container">
   <div id="content" class="loading">Carregando...</div>
 </div>
@@ -180,7 +198,7 @@ async function carregar() {
     return
   }
 
-  document.title = data.title
+  document.title = data.title + ' - Vaquinha Online'
   const porcentagem = data.goal > 0 ? Math.min((data.current_amount / data.goal) * 100, 100) : 0
 
   content.innerHTML = `
@@ -202,7 +220,6 @@ async function carregar() {
     <div class="box">
       <input id="valor" type="number" placeholder="1,00" step="0.01" min="0.01" value="1,00">
       <button onclick="copiarPix('${data.pix_key}', '${data.title}')">Copiar PIX Copia e Cola</button>
-      <div id="qrcode" class="hidden"></div>
     </div>
 
     <div class="box-link">
