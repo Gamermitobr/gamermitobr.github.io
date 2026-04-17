@@ -4,84 +4,140 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Criar Vaquinha</title>
-
-  <!-- CSS FORÇADO -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
-      background-color: #0f0f0f;
-      color: #ffffff;
-      font-family: Arial;
-      padding: 20px;
+      background-color: #0a0a0a; color: #f1f1f1; font-family: 'Inter', sans-serif;
+      min-height: 100vh; padding: 20px;
     }
-
-    h1 {
-      text-align: center;
-      margin-bottom: 20px;
+    .header {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 0 0 30px 0; max-width: 500px; margin: 0 auto;
     }
-
+    .header h1 { font-size: 20px; font-weight: 700; }
+    .header a {
+      color: #9e9e9e; text-decoration: none; font-size: 14px;
+    }
+    .header a:hover { color: #fff; }
+    .container {
+      max-width: 500px; margin: 0 auto;
+    }
     .card {
-      background-color: #1a1a1a;
-      padding: 20px;
-      border-radius: 12px;
-      max-width: 400px;
-      margin: auto;
+      background: #121212; padding: 32px; border-radius: 16px;
+      border: 1px solid #1f1f1f;
     }
-
+    h2 {
+      font-size: 24px; margin-bottom: 8px; text-align: center;
+    }
+    .subtitle {
+      color: #9e9e9e; text-align: center; margin-bottom: 24px; font-size: 15px;
+    }
+    label {
+      display: block; margin-bottom: 6px; font-size: 14px; font-weight: 600;
+    }
     input, textarea {
-      width: 100%;
-      padding: 12px;
-      margin-bottom: 10px;
-      border-radius: 8px;
-      border: none;
-      background-color: #2a2a2a;
-      color: white;
-      font-size: 16px;
+      width: 100%; padding: 14px; margin-bottom: 16px; border-radius: 10px;
+      border: 1px solid #2a2a2a; background-color: #1a1a1a; color: white;
+      font-size: 16px; font-family: 'Inter', sans-serif;
     }
-
+    input:focus, textarea:focus {
+      outline: none; border-color: #00c853;
+    }
+    textarea {
+      resize: vertical; min-height: 100px;
+    }
     button {
-      width: 100%;
-      padding: 12px;
-      background-color: #00c853;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      font-size: 16px;
+      width: 100%; padding: 16px; background: #00c853; color: #000;
+      border: none; border-radius: 10px; font-size: 16px; font-weight: 600;
+      cursor: pointer; transition: background 0.2s;
     }
+    button:hover { background: #00e676; }
+    button:disabled { background: #2a2a2a; color: #616161; cursor: not-allowed; }
+    .alert {
+      padding: 14px; border-radius: 10px; margin-bottom: 16px; text-align: center; font-size: 14px;
+    }
+    .alert.error { background: #4a1515; color: #ff5252; }
+    .alert.success { background: #0d3d1f; color: #00e676; }
+    .hidden { display: none; }
   </style>
 </head>
-
 <body>
 
-<h1>➕ Criar Vaquinha</h1>
+<div class="header">
+  <h1>💰 Vaquinha Online</h1>
+  <a href="dashboard.html">← Voltar</a>
+</div>
 
-<div class="card">
-  <input id="title" placeholder="Título">
-  <textarea id="desc" placeholder="Descrição"></textarea>
-  <input id="goal" type="number" placeholder="Meta">
+<div class="container">
+  <div class="card">
+    <h2>Criar nova vaquinha</h2>
+    <p class="subtitle">Preencha os dados abaixo pra começar a receber ajuda</p>
 
-  <button onclick="criar()">Criar</button>
+    <div id="alerta" class="alert hidden"></div>
+
+    <label for="title">Título da vaquinha</label>
+    <input id="title" type="text" placeholder="Ex: Ajuda para cirurgia do meu pet">
+
+    <label for="desc">Descrição</label>
+    <textarea id="desc" placeholder="Conte sua história e explique por que precisa de ajuda"></textarea>
+
+    <label for="goal">Meta de arrecadação (R$)</label>
+    <input id="goal" type="number" placeholder="Ex: 5000" min="1" step="0.01">
+
+    <button id="btn-criar" onclick="criar()">Criar vaquinha</button>
+  </div>
 </div>
 
 <script type="module">
 import { supabase } from './supabase.js'
 
+// Se não tá logado, volta pro login
+const { data: { user } } = await supabase.auth.getUser()
+if (!user) {
+  window.location.href = 'login.html'
+}
+
+const alerta = document.getElementById('alerta')
+const btnCriar = document.getElementById('btn-criar')
+
+function mostrarAlerta(msg, tipo = 'error') {
+  alerta.textContent = msg
+  alerta.className = `alert ${tipo}`
+  alerta.classList.remove('hidden')
+}
+
 window.criar = async function() {
-  const { data: user } = await supabase.auth.getUser()
+  const title = document.getElementById('title').value.trim()
+  const desc = document.getElementById('desc').value.trim()
+  const goal = document.getElementById('goal').value
 
-  if (!user.user) {
-    alert("Faça login")
-    return
-  }
+  // Validação
+  if (!title) return mostrarAlerta('Coloca um título pra sua vaquinha')
+  if (!goal || goal <= 0) return mostrarAlerta('Coloca uma meta válida maior que zero')
+  
+  btnCriar.disabled = true
+  btnCriar.textContent = 'Criando...'
+  alerta.classList.add('hidden')
 
-  await supabase.from('campaigns').insert([{
-    title: title.value,
-    description: desc.value,
-    goal: goal.value,
+  const { error } = await supabase.from('campaigns').insert([{
+    title: title,
+    description: desc,
+    goal: goal,
     current_amount: 0,
-    user_id: user.user.id
+    user_id: user.id
   }])
 
-  alert("Criado com sucesso!")
+  if (error) {
+    mostrarAlerta('Erro ao criar: ' + error.message)
+    btnCriar.disabled = false
+    btnCriar.textContent = 'Criar vaquinha'
+  } else {
+    mostrarAlerta('Vaquinha criada com sucesso!', 'success')
+    setTimeout(() => {
+      window.location.href = 'dashboard.html'
+    }, 1500)
+  }
 }
 </script>
 
