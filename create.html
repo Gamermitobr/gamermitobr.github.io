@@ -59,7 +59,8 @@
 
     <div class="form-group">
       <label for="meta">Meta de arrecadação R$ *</label>
-      <input type="number" id="meta" required min="10" step="0.01" placeholder="5000.00">
+      <input type="text" id="meta" required placeholder="5.000,00" inputmode="decimal">
+      <small>Digite apenas números. Ex: 5000 ou 40.000</small>
     </div>
 
     <fieldset>
@@ -110,6 +111,26 @@ function mostrarErro(msg) {
   console.error(msg)
 }
 
+// Formata o campo de meta enquanto digita
+function formatarMoeda(input) {
+  let valor = input.value.replace(/\D/g, '')
+  if (!valor) {
+    input.value = ''
+    return
+  }
+  valor = (parseInt(valor) / 100).toFixed(2)
+  valor = valor.replace('.', ',')
+  valor = valor.replace(/\B(?=(\d{3})+(?!\d))/g, '.')
+  input.value = valor
+}
+
+// Converte R$ 40.000,00 para 40000
+function desformatarMoeda(valor) {
+  return Number(valor.replace(/\./g, '').replace(',', '.')) || 0
+}
+
+document.getElementById('meta').addEventListener('input', (e) => formatarMoeda(e.target))
+
 try {
   const { data: { user }, error: authError } = await supabase.auth.getUser()
   
@@ -120,13 +141,21 @@ try {
     throw new Error('Não logado')
   }
 
-  // Se chegou aqui, tá logado
   document.getElementById('form-vaquinha').addEventListener('submit', async (e) => {
     e.preventDefault()
     const btn = document.getElementById('btn-criar')
     btn.disabled = true
     btn.textContent = 'Criando...'
     erroBox.style.display = 'none'
+
+    const metaValor = desformatarMoeda(document.getElementById('meta').value)
+    
+    if (metaValor < 10) {
+      mostrarErro('A meta mínima é R$ 10,00')
+      btn.disabled = false
+      btn.textContent = 'Criar vaquinha'
+      return
+    }
 
     const pixData = {
       pix_key: document.getElementById('pix-key').value.replace(/\D/g,''),
@@ -138,7 +167,7 @@ try {
     const { error } = await supabase.from('campaigns').insert({
       title: document.getElementById('titulo').value,
       description: document.getElementById('descricao').value,
-      goal: parseFloat(document.getElementById('meta').value),
+      goal: metaValor,
       user_id: user.id,
       current_amount: 0,
       status: 'active',
