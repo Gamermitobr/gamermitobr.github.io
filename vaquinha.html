@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vaquinha</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background-color: #0a0a0a; color: #f1f1f1; font-family: 'Inter', sans-serif; }
+    .header { padding: 20px 5%; background: #0f0f0f; border-bottom: 1px solid #1a1a1a; }
+    .header a { color: #f1f1f1; text-decoration: none; font-weight: 700; font-size: 20px; }
+    .container { max-width: 700px; margin: 0 auto; padding: 40px 20px; }
+    .card { background: #121212; padding: 32px; border-radius: 16px; border: 1px solid #1f1f1f; }
+    h1 { font-size: 28px; margin-bottom: 12px; }
+    .desc { color: #9e9e9e; margin-bottom: 24px; line-height: 1.6; }
+    .progress-bar { background: #2a2a2a; height: 12px; border-radius: 6px; margin-bottom: 12px; }
+    .progress { background: #00c853; height: 100%; border-radius: 6px; transition: width 0.5s; }
+    .values { display: flex; justify-content: space-between; margin-bottom: 32px; }
+    .values div { font-size: 14px; color: #9e9e9e; }
+    .values b { color: #fff; font-size: 20px; display: block; }
+    .pix-box { background: #1a1a1a; padding: 20px; border-radius: 12px; margin-bottom: 16px; }
+    .pix-box label { font-size: 12px; color: #9e9e9e; display: block; margin-bottom: 8px; }
+    .pix-box .key { font-size: 18px; font-weight: 600; word-break: break-all; margin-bottom: 12px; }
+    button {
+      width: 100%; padding: 14px; background: #00c853; color: #000; border: none;
+      border-radius: 10px; font-size: 16px; font-weight: 600; cursor: pointer; margin-bottom: 10px;
+    }
+    button.secondary { background: #2a2a2a; color: #fff; border: 1px solid #3a3a3a; }
+    .loading { text-align: center; padding: 60px; color: #616161; }
+  </style>
+</head>
+<body>
+
+<header class="header">
+  <a href="index.html">💰 Vaquinha Online</a>
+</header>
+
+<div class="container">
+  <div id="content" class="loading">Carregando vaquinha...</div>
+</div>
+
+<script type="module">
+import { supabase } from './supabase.js'
+
+const urlParams = new URLSearchParams(window.location.search)
+const id = urlParams.get('id')
+const content = document.getElementById('content')
+
+if (!id) {
+  content.innerHTML = '<div class="card">Vaquinha não encontrada</div>'
+} else {
+  carregarVaquinha()
+}
+
+async function carregarVaquinha() {
+  const { data, error } = await supabase
+    .from('campaigns')
+    .select('*')
+    .eq('id', id)
+    .single()
+
+  if (error || !data) {
+    content.innerHTML = '<div class="card">Vaquinha não encontrada</div>'
+    return
+  }
+
+  document.title = data.title + ' - Vaquinha Online'
+  const porcentagem = data.goal > 0 ? Math.min((data.current_amount / data.goal) * 100, 100) : 0
+  const link = window.location.href
+
+  content.innerHTML = `
+    <div class="card">
+      <h1>${data.title}</h1>
+      <p class="desc">${data.description || 'Sem descrição'}</p>
+      
+      <div class="progress-bar"><div class="progress" style="width: ${porcentagem}%"></div></div>
+      <div class="values">
+        <div>Arrecadado<b>R$ ${data.current_amount || 0}</b></div>
+        <div>Meta<b>R$ ${data.goal}</b></div>
+      </div>
+
+      <div class="pix-box">
+        <label>Chave PIX para doação</label>
+        <div class="key">${data.pix_key || 'Não informada'}</div>
+        <button onclick="copiarPix('${data.pix_key}')">Copiar chave PIX</button>
+      </div>
+
+      <button class="secondary" onclick="copiarLink()">Copiar link da vaquinha</button>
+    </div>
+  `
+
+  window.copiarPix = (chave) => {
+    navigator.clipboard.writeText(chave)
+    alert('Chave PIX copiada!')
+  }
+
+  window.copiarLink = () => {
+    navigator.clipboard.writeText(link)
+    alert('Link copiado! Compartilhe com seus amigos')
+  }
+}
+</script>
+
+</body>
+</html>
