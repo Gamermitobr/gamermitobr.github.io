@@ -154,18 +154,18 @@ if (!id) {
 }
 
 function gerarPayloadPix(chave, valor = null) {
-  chave = chave.trim()
+  chave = String(chave).trim()
   if (!chave) throw new Error('Chave PIX vazia')
-  
+
   const format = (id, value) => {
     const size = String(value.length).padStart(2, '0')
     return `${id}${size}${value}`
   }
-  
+
   const gui = format('00', 'BR.GOV.BCB.PIX')
   const chaveFormatada = format('01', chave)
   const merchantAccount = format('26', gui + chaveFormatada)
-  
+
   let payload = '000201'
   payload += merchantAccount
   payload += '52040000'
@@ -176,18 +176,20 @@ function gerarPayloadPix(chave, valor = null) {
   }
   
   payload += '5802BR'
-  payload += '5909VAQUINHA'
-  payload += '6008BRASIL'
-  payload += '62070503***'
+  payload += format('59', 'VAQUINHA ONLINE'.substring(0, 25))
+  payload += format('60', 'BRASIL'.substring(0, 15))
+  
+  const txid = format('05', '***')
+  payload += format('62', txid)
+  
   payload += '6304'
 
   let crc = 0xFFFF
-  const polinomio = 0x1021
   for (let i = 0; i < payload.length; i++) {
     crc ^= payload.charCodeAt(i) << 8
     for (let j = 0; j < 8; j++) {
       if ((crc & 0x8000) !== 0) {
-        crc = (crc << 1) ^ polinomio
+        crc = (crc << 1) ^ 0x1021
       } else {
         crc <<= 1
       }
