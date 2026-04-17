@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Editar Vaquinha</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: #0a0a0a; color: #f1f1f1; font-family: 'Inter', sans-serif; }
+    .header {
+      display: flex; justify-content: space-between; align-items: center; padding: 20px 5%;
+      background: #0f0f0f; border-bottom: 1px solid #1a1a1a;
+    }
+    .header h1 { font-size: 20px; font-weight: 700; }
+    .header a {
+      background: #2a2a2a; border: 1px solid #3a3a3a; color: #f1f1f1;
+      padding: 8px 16px; border-radius: 8px; text-decoration: none; font-size: 14px;
+    }
+    .header a:hover { background: #333; }
+    .container { max-width: 600px; margin: 40px auto; padding: 20px; }
+    .card { background: #121212; border: 1px solid #1f1f1f; border-radius: 16px; padding: 32px; margin-bottom: 20px; }
+    h2 { margin-bottom: 8px; font-size: 24px; }
+    .subtitle { color: #9e9e9e; margin-bottom: 24px; font-size: 14px; }
+    .form-group { margin-bottom: 20px; }
+    label { display: block; margin-bottom: 6px; font-weight: 600; font-size: 14px; }
+    input, textarea {
+      width: 100%; padding: 12px; background: #0a0a0a; border: 1px solid #2a2a2a;
+      color: #f1f1f1; border-radius: 8px; font-family: inherit; font-size: 15px;
+    }
+    input:focus, textarea:focus {
+      outline: 2px solid #00c853; outline-offset: 2px; border-color: #00c853;
+    }
+    input:disabled { background: #1a1a1a; color: #666; cursor: not-allowed; }
+    .values-atual {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px;
+      padding: 16px; background: #0a0a0a; border-radius: 8px; border: 1px solid #1f1f1f;
+    }
+    .values-atual div { text-align: center; }
+    .values-atual .label { color: #9e9e9e; font-size: 12px; margin-bottom: 4px; }
+    .values-atual .valor { font-size: 20px; font-weight: 700; color: #00c853; }
+    button {
+      width: 100%; padding: 14px; background: #00c853; color: #000; border: none;
+      border-radius: 10px; font-weight: 700; font-size: 16px; cursor: pointer; transition: all 0.2s;
+    }
+    button:hover { background: #00e676; transform: translateY(-1px); }
+    button:disabled { background: #333; color: #666; cursor: not-allowed; transform: none; }
+    .btn-danger { background: #ff5252; color: #fff; margin-top: 12px; }
+    .btn-danger:hover { background: #ff6e6e; }
+    .aviso {
+      background: #1a1a0f; border: 1px solid #3a3a1a; border-radius: 8px;
+      padding: 12px; margin-bottom: 20px; font-size: 13px; color: #d4d4a0; line-height: 1.5;
+    }
+    .loading { text-align: center; padding: 60px; color: #616161; }
+    .erro { text-align: center; padding: 60px; color: #ff5252; }
+  </style>
+</head>
+<body>
+
+<header class="header">
+  <h1>💰 Vaquinha Online</h1>
+  <a href="dashboard.html">← Voltar</a>
+</header>
+
+<div class="container">
+  <div id="loading" class="loading">Carregando...</div>
+  <div id="erro" class="erro" style="display:none;"></div>
+  
+  <div id="conteudo" style="display:none;">
+    <div class="card">
+      <h2>Editar Vaquinha</h2>
+      <p class="subtitle" id="titulo-atual"></p>
+
+      <div class="values-atual">
+        <div>
+          <div class="label">Arrecadado</div>
+          <div class="valor" id="valor-atual">R$ 0,00</div>
+        </div>
+        <div>
+          <div class="label">Meta</div>
+          <div class="valor" id="valor-meta">R$ 0,00</div>
+        </div>
+      </div>
+
+      <div class="aviso">
+        ⚠️ <b>Importante:</b> Como as doações vão direto pra sua conta Pix, você precisa atualizar manualmente o valor total aqui sempre que receber. Isso mantém a barra de progresso correta pra todo mundo.
+      </div>
+
+      <form id="form-editar">
+        <div class="form-group">
+          <label for="titulo">Título da vaquinha</label>
+          <input type="text" id="titulo" required maxlength="100">
+        </div>
+
+        <div class="form-group">
+          <label for="descricao">Descrição</label>
+          <textarea id="descricao" rows="4" maxlength="500"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="meta">Meta R$</label>
+          <input type="number" id="meta" required min="10" step="0.01">
+        </div>
+
+        <div class="form-group">
+          <label for="valor-arrecadado">Valor arrecadado R$ *</label>
+          <input type="number" id="valor-arrecadado" required min="0" step="0.01">
+          <small style="color: #616161; font-size: 12px; display: block; margin-top: 4px;">
+            Atualize este valor conforme receber doações na sua conta
+          </small>
+        </div>
+
+        <div class="form-group">
+          <label for="pix-key">Chave Pix cadastrada</label>
+          <input type="text" id="pix-key" disabled>
+          <small style="color: #616161; font-size: 12px; display: block; margin-top: 4px;">
+            Para alterar a chave Pix, você precisa criar uma nova vaquinha
+          </small>
+        </div>
+
+        <button type="submit" id="btn-salvar">Salvar alterações</button>
+      </form>
+    </div>
+
+    <div class="card">
+      <h3 style="color: #ff5252; margin-bottom: 12px;">Zona de perigo</h3>
+      <p style="color: #9e9e9e; font-size: 14px; margin-bottom: 16px;">
+        Encerrar a vaquinha vai ocultar ela do dashboard. Esta ação não pode ser desfeita.
+      </p>
+      <button type="button" class="btn-danger" onclick="encerrarVaquinha()">Encerrar vaquinha</button>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+import { supabase } from './supabase.js'
+
+const urlParams = new URLSearchParams(window.location.search)
+const id = urlParams.get('id')
+
+if (!id) {
+  mostrarErro('ID da vaquinha não informado')
+  throw new Error('ID não informado')
+}
+
+// Checa login
+const { data: { user } } = await supabase.auth.getUser()
+if (!user) {
+  window.location.href = 'index.html'
+  throw new Error('Não logado')
+}
+
+// Busca vaquinha
+const { data: v, error } = await supabase
+  .from('campaigns')
+  .select('*')
+  .eq('id', id)
+  .single()
+
+if (error || !v) {
+  mostrarErro('Vaquinha não encontrada')
+  throw new Error('Não encontrada')
+}
+
+// Checa se é o dono
+if (v.user_id !== user.id) {
+  mostrarErro('Você não tem permissão para editar esta vaquinha')
+  throw new Error('Sem permissão')
+}
+
+// Preenche formulário
+document.getElementById('loading').style.display = 'none'
+document.getElementById('conteudo').style.display = 'block'
+document.getElementById('titulo-atual').textContent = v.title
+document.getElementById('valor-atual').textContent = Number(v.current_amount).toLocaleString('pt-BR', {style:'currency',currency:'BRL'})
+document.getElementById('valor-meta').textContent = Number(v.goal).toLocaleString('pt-BR', {style:'currency',currency:'BRL'})
+
+document.getElementById('titulo').value = v.title
+document.getElementById('descricao').value = v.description || ''
+document.getElementById('meta').value = v.goal
+document.getElementById('valor-arrecadado').value = v.current_amount
+document.getElementById('pix-key').value = v.metadata?.pix_key || 'Não configurada'
+
+// Salvar alterações
+document.getElementById('form-editar').addEventListener('submit', async (e) => {
+  e.preventDefault()
+  const btn = document.getElementById('btn-salvar')
+  btn.disabled = true
+  btn.textContent = 'Salvando...'
+
+  const { error } = await supabase
+    .from('campaigns')
+    .update({
+      title: document.getElementById('titulo').value,
+      description: document.getElementById('descricao').value,
+      goal: parseFloat(document.getElementById('meta').value),
+      current_amount: parseFloat(document.getElementById('valor-arrecadado').value)
+    })
+    .eq('id', id)
+
+  if (error) {
+    alert('Erro ao salvar: ' + error.message)
+    btn.disabled = false
+    btn.textContent = 'Salvar alterações'
+  } else {
+    alert('Vaquinha atualizada com sucesso!')
+    window.location.href = 'vaquinha.html?id=' + id
+  }
+})
+
+// Encerrar vaquinha
+window.encerrarVaquinha = async function() {
+  if (!confirm('Tem certeza que deseja encerrar esta vaquinha? Ela será ocultada do dashboard.')) return
+  
+  const { error } = await supabase
+    .from('campaigns')
+    .update({ status: 'closed' })
+    .eq('id', id)
+
+  if (error) {
+    alert('Erro ao encerrar: ' + error.message)
+  } else {
+    alert('Vaquinha encerrada')
+    window.location.href = 'dashboard.html'
+  }
+}
+
+function mostrarErro(msg) {
+  document.getElementById('loading').style.display = 'none'
+  document.getElementById('erro').style.display = 'block'
+  document.getElementById('erro').textContent = msg
+}
+</script>
+
+</body>
+</html>
