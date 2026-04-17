@@ -61,6 +61,16 @@
       margin-bottom: 16px;
     }
 
+    .pix-key {
+      background-color: #0f0f0f;
+      padding: 12px;
+      border-radius: 8px;
+      word-break: break-all;
+      font-size: 14px;
+      margin-bottom: 10px;
+      color: #9e9e9e;
+    }
+
     input {
       width: 100%;
       padding: 12px;
@@ -98,6 +108,7 @@
 
     .hidden { display: none; }
     .loading { text-align: center; padding: 40px; color: #616161; }
+    .small { font-size: 12px; color: #616161; text-align: center; margin-top: 8px; }
   </style>
 </head>
 <body>
@@ -158,6 +169,7 @@ async function carregar() {
 
   document.title = data.title
   const porcentagem = data.goal > 0 ? Math.min((data.current_amount / data.goal) * 100, 100) : 0
+  const payloadPix = gerarPayloadPix(data.pix_key, data.title.substring(0, 25))
 
   content.innerHTML = `
     <h1>${data.title}</h1>
@@ -170,35 +182,45 @@ async function carregar() {
     </div>
 
     <div class="box">
+      <div class="pix-key" id="pix-copia">${payloadPix}</div>
+      <button onclick="copiarPix()">Copiar PIX Copia e Cola</button>
+      
       <input id="valor" type="number" placeholder="1,00" step="0.01" min="0.01">
-      <button onclick="gerarQR('${data.pix_key}', '${data.title}')">Gerar QR Code Pix</button>
+      <button class="secondary" onclick="mostrarQR('${data.pix_key}', '${data.title}')">Gerar QR Code</button>
       <div id="qrcode" class="hidden"></div>
+      <div class="small">O valor é opcional. Deixe vazio pra doar qualquer quantia.</div>
     </div>
 
     <button class="secondary" onclick="copiarLink()">🔗 Copiar link</button>
   `
+
+  window.copiarPix = () => {
+    const pixCode = document.getElementById('pix-copia').textContent
+    navigator.clipboard.writeText(pixCode)
+    alert('PIX Copia e Cola copiado! Cole no app do seu banco.')
+  }
 
   window.copiarLink = () => {
     navigator.clipboard.writeText(window.location.href)
     alert('Link copiado!')
   }
 
-  window.gerarQR = (chave, titulo) => {
+  window.mostrarQR = (chave, titulo) => {
     const valor = document.getElementById('valor').value
     const qrDiv = document.getElementById('qrcode')
-    qrDiv.classList.add('hidden')
     
     if (!chave) return alert('Essa vaquinha não tem chave PIX')
     
     try {
       const payload = gerarPayloadPix(chave, titulo.substring(0, 25), 'BRASIL', valor || null)
+      document.getElementById('pix-copia').textContent = payload
       const qr = qrcode(0, 'M')
       qr.addData(payload)
       qr.make()
       qrDiv.innerHTML = qr.createImgTag(5, 6)
       qrDiv.classList.remove('hidden')
     } catch (e) {
-      alert('Erro ao gerar QR Code: ' + e.message)
+      alert('Erro ao gerar QR Code')
     }
   }
 }
