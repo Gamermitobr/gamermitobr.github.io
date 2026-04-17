@@ -116,86 +116,61 @@ const lista = document.getElementById('lista-vaquinhas')
 function mostrarErro(msg) {
   erroBox.textContent = msg
   erroBox.style.display = 'block'
-  console.error('[ERRO]', msg)
+  console.error(msg)
 }
 
-// Função de navegação com debug
 window.irParaCriar = function() {
-  console.log('[DEBUG] Clicou em Criar nova vaquinha')
-  console.log('[DEBUG] Redirecionando para: create.html')
   window.location.href = 'create.html'
 }
 
-// Logout
 window.logout = async function() {
-  console.log('[DEBUG] Fazendo logout')
   await supabase.auth.signOut()
   window.location.href = 'index.html'
 }
 
-// Função pra copiar link
 window.copiarLink = function(id) {
   const url = `${window.location.origin}/vaquinha.html?id=${id}`
   navigator.clipboard.writeText(url)
   alert('Link copiado!')
 }
 
-// Carrega dados ao iniciar
 async function init() {
   try {
-    console.log('[DEBUG] Iniciando dashboard...')
-    
-    // Checa autenticação
     const { data: { user }, error: authError } = await supabase.auth.getUser()
     
-    if (authError) {
-      console.error('[DEBUG] Erro de auth:', authError)
-      throw authError
-    }
-    
+    if (authError) throw authError
     if (!user) {
-      console.log('[DEBUG] Usuário não logado, redirecionando...')
       window.location.href = 'index.html'
       return
     }
 
-    console.log('[DEBUG] Usuário logado:', user.email)
     document.getElementById('user-email').textContent = user.email
 
-    // Busca vaquinhas
-    console.log('[DEBUG] Buscando vaquinhas...')
     const { data: vaquinhas, error } = await supabase
       .from('campaigns')
       .select('*')
       .eq('user_id', user.id)
+      .eq('status', 'active')
       .order('created_at', { ascending: false })
 
-    if (error) {
-      console.error('[DEBUG] Erro ao buscar vaquinhas:', error)
-      throw error
-    }
+    if (error) throw error
 
-    console.log('[DEBUG] Vaquinhas encontradas:', vaquinhas?.length || 0)
-
-    // Renderiza
     if (!vaquinhas || vaquinhas.length === 0) {
       lista.innerHTML = `
         <div class="empty-state">
-          <h3>Você ainda não criou nenhuma vaquinha</h3>
-          <p>Clique no botão acima para começar</p>
+          <h3>Você não tem vaquinhas ativas</h3>
+          <p>Clique no botão acima para criar uma nova</p>
         </div>
       `
     } else {
       lista.innerHTML = vaquinhas.map(v => {
         const pct = v.goal > 0 ? Math.min((v.current_amount / v.goal) * 100, 100) : 0
-        const statusClass = v.status === 'active' ? 'active' : 'closed'
-        const statusText = v.status === 'active' ? 'Ativa' : 'Encerrada'
         
         return `
           <div class="card">
             <div class="card-header">
               <h3>${v.title}</h3>
-              <span class="status ${statusClass}">${statusText}</span>
+              <span class="status active">Ativa</span>
             </div>
             <p class="descricao">${v.description || 'Sem descrição'}</p>
             <div class="progress-bar">
@@ -214,15 +189,12 @@ async function init() {
       }).join('')
     }
 
-    console.log('[DEBUG] Dashboard carregado com sucesso')
-
   } catch (err) {
     mostrarErro('Erro ao carregar dashboard: ' + err.message)
     lista.innerHTML = `<div class="loading" style="color: #ff5252;">Erro ao carregar. Veja mensagem acima.</div>`
   }
 }
 
-// Inicia quando a página carregar
 init()
 </script>
 
