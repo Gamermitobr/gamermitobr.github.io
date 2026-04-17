@@ -13,247 +13,74 @@
       --bg-elevated: #121212;
       --bg-header: #0f0f0f;
       --border: #1f1f1f;
-      --border-hover: #00c853;
       --text: #f1f1f1;
       --text-muted: #9e9e9e;
-      --text-darker: #616161;
       --primary: #00c853;
       --primary-hover: #00e676;
-      --btn-bg: #2a2a2a;
-      --btn-border: #3a3a3a;
-      --progress-bg: #2a2a2a;
-      --radius: 16px;
-      --radius-sm: 8px;
-      --shadow: 0 4px 12px rgba(0, 200, 83, 0.1);
+      --danger: #ff5252;
+      --radius: 12px;
     }
-
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    
-    body { 
-      background-color: var(--bg); 
-      color: var(--text); 
-      font-family: 'Inter', sans-serif;
-      line-height: 1.5;
-    }
-
-    /* Header */
+    body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; line-height: 1.6; }
     .header {
-      display: flex; 
-      justify-content: space-between; 
-      align-items: center; 
-      padding: 16px 5%;
-      background: var(--bg-header); 
-      border-bottom: 1px solid var(--border); 
-      position: sticky; 
-      top: 0; 
-      z-index: 10;
-      backdrop-filter: blur(8px);
+      display: flex; justify-content: space-between; align-items: center; padding: 16px 5%;
+      background: var(--bg-header); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 10;
     }
-    .header h1 { 
-      font-size: clamp(18px, 4vw, 20px); 
-      font-weight: 700; 
-      display: flex;
-      align-items: center;
-      gap: 8px;
+    .header h1 { font-size: 20px; font-weight: 700; }
+    .user-area { display: flex; align-items: center; gap: 16px; }
+    .user-email { color: var(--text-muted); font-size: 14px; }
+    .btn-logout {
+      background: #2a2a2a; border: 1px solid #3a3a3a; color: var(--text);
+      padding: 8px 16px; border-radius: 8px; cursor: pointer; font-size: 14px; font-family: inherit;
     }
-    .header .user-box { 
-      display: flex; 
-      gap: 12px; 
-      align-items: center; 
-      font-size: 14px; 
-    }
-    .header .user-email {
-      max-width: 150px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-    .header button {
-      background: var(--btn-bg); 
-      border: 1px solid var(--btn-border); 
-      color: var(--text);
-      padding: 8px 16px; 
-      border-radius: var(--radius-sm); 
-      cursor: pointer;
-      font-family: inherit;
-      font-weight: 600;
-      transition: all 0.2s;
-    }
-    .header button:hover, .header button:focus-visible { 
-      background: #333; 
-      border-color: #444;
-      outline: 2px solid var(--primary);
-      outline-offset: 2px;
-    }
-
-    /* Container */
-    .container { 
-      max-width: 1200px; 
-      margin: 0 auto; 
-      padding: 32px 20px; 
-    }
-    
-    /* Top Bar */
-    .top-bar {
-      display: flex; 
-      justify-content: space-between; 
-      align-items: center; 
-      margin-bottom: 32px;
-      gap: 16px;
-      flex-wrap: wrap;
-    }
-    .top-bar h2 { 
-      font-size: clamp(24px, 5vw, 28px); 
-    }
+    .btn-logout:hover { background: #333; }
+    .container { max-width: 1100px; margin: 40px auto; padding: 0 20px; }
+    .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px; flex-wrap: wrap; gap: 16px; }
+    .top-bar h2 { font-size: 28px; }
     .btn-main {
-      padding: 12px 24px; 
-      background: var(--primary); 
-      color: #000; 
-      text-decoration: none;
-      border-radius: 10px; 
-      font-weight: 600; 
-      transition: all 0.2s;
-      border: none;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
+      background: var(--primary); color: #000; border: none; padding: 12px 24px;
+      border-radius: 10px; font-weight: 700; font-size: 15px; cursor: pointer;
+      text-decoration: none; display: inline-block; transition: all 0.2s; font-family: inherit;
     }
-    .btn-main:hover, .btn-main:focus-visible { 
-      background: var(--primary-hover); 
-      transform: translateY(-1px);
-      box-shadow: var(--shadow);
-      outline: 2px solid var(--primary);
-      outline-offset: 2px;
-    }
-
-    /* Grid */
-    .grid {
-      display: grid; 
-      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); 
-      gap: 24px;
-    }
-    
-    /* Card */
-    .card-link { 
-      text-decoration: none; 
-      color: inherit; 
-      display: block;
-    }
-    .card-link:focus-visible {
-      outline: 2px solid var(--primary);
-      outline-offset: 4px;
-      border-radius: var(--radius);
-    }
+    .btn-main:hover { background: var(--primary-hover); transform: translateY(-1px); }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
     .card {
-      background: var(--bg-elevated); 
-      border: 1px solid var(--border); 
-      border-radius: var(--radius); 
-      padding: 24px;
-      transition: all 0.2s; 
-      height: 100%;
-      display: flex;
-      flex-direction: column;
+      background: var(--bg-elevated); border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 24px; transition: all 0.2s; display: flex; flex-direction: column;
     }
-    .card:hover {
-      border-color: var(--border-hover); 
-      transform: translateY(-4px);
-      box-shadow: var(--shadow);
+    .card:hover { border-color: #333; transform: translateY(-2px); }
+    .card-header { display: flex; justify-content: space-between; align-items: start; margin-bottom: 12px; }
+    .card h3 { font-size: 18px; word-break: break-word; flex: 1; }
+    .status {
+      font-size: 11px; padding: 4px 8px; border-radius: 4px; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 0.5px;
     }
-    .card-header {
-      margin-bottom: 12px;
+    .status.active { background: #0a2a1a; color: var(--primary); }
+    .status.closed { background: #2a1a0a; color: #ffa726; }
+    .card .descricao { color: var(--text-muted); font-size: 14px; margin-bottom: 16px; flex-grow: 1; line-height: 1.5; }
+    .progress-bar { background: #2a2a2a; height: 8px; border-radius: 4px; margin: 16px 0 8px; overflow: hidden; }
+    .progress { background: var(--primary); height: 100%; border-radius: 4px; transition: width 0.5s; }
+    .values { display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 16px; }
+    .values b { color: var(--primary); }
+    .card-actions { display: flex; gap: 8px; margin-top: auto; }
+    .card-actions a {
+      flex: 1; text-align: center; padding: 10px; background: #2a2a2a; border-radius: 8px;
+      color: var(--text); text-decoration: none; font-size: 14px; font-weight: 600; transition: all 0.2s;
     }
-    .card h3 { 
-      font-size: 18px; 
-      margin-bottom: 4px;
-      word-break: break-word;
+    .card-actions a:hover { background: #333; }
+    .card-actions a.primary { background: var(--primary); color: #000; }
+    .card-actions a.primary:hover { background: var(--primary-hover); }
+    .empty-state { text-align: center; padding: 80px 20px; color: var(--text-muted); grid-column: 1 / -1; }
+    .empty-state h3 { font-size: 20px; margin-bottom: 8px; color: var(--text); }
+    .loading { text-align: center; padding: 80px 20px; color: var(--text-muted); grid-column: 1 / -1; }
+    .erro-box {
+      background: #2a0a0a; border: 1px solid #5a1a1a; color: #ff6e6e;
+      padding: 16px; border-radius: 8px; margin-bottom: 20px; display: none;
     }
-    .card-date {
-      font-size: 12px;
-      color: var(--text-darker);
-    }
-    .card p { 
-      color: var(--text-muted); 
-      font-size: 14px; 
-      margin-bottom: 20px; 
-      flex-grow: 1;
-      display: -webkit-box; 
-      -webkit-line-clamp: 2; 
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-      word-break: break-word;
-    }
-    .progress-bar { 
-      background: var(--progress-bg); 
-      height: 8px; 
-      border-radius: 4px; 
-      margin-bottom: 12px;
-      overflow: hidden;
-    }
-    .progress { 
-      background: var(--primary); 
-      height: 100%; 
-      border-radius: 4px; 
-      transition: width 0.5s ease-out;
-    }
-    .values { 
-      display: flex; 
-      justify-content: space-between; 
-      font-size: 14px;
-      gap: 8px;
-    }
-    .values b { color: var(--text); }
-    .values-percentage {
-      font-size: 12px;
-      color: var(--primary);
-      font-weight: 600;
-      margin-top: 4px;
-      text-align: right;
-    }
-
-    /* Estados */
-    .alert { 
-      text-align: center; 
-      padding: 60px 20px; 
-      color: var(--text-darker); 
-      grid-column: 1 / -1; 
-    }
-    .alert-error {
-      color: #ff5252;
-    }
-
-    /* Skeleton Loading */
-    .skeleton {
-      animation: pulse 1.5s ease-in-out infinite;
-    }
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.5; }
-    }
-    .skeleton-card {
-      background: var(--bg-elevated);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 24px;
-      height: 220px;
-    }
-    .skeleton-line {
-      background: var(--btn-bg);
-      border-radius: 4px;
-      margin-bottom: 12px;
-    }
-    .skeleton-title { height: 20px; width: 70%; }
-    .skeleton-text { height: 14px; width: 100%; }
-    .skeleton-bar { height: 8px; width: 100%; margin-top: 20px; }
-
-    /* Mobile */
     @media (max-width: 640px) {
-      .header { padding: 12px 16px; }
-      .container { padding: 24px 16px; }
-      .top-bar { flex-direction: column; align-items: stretch; }
-      .btn-main { justify-content: center; }
+      .user-email { display: none; }
       .grid { grid-template-columns: 1fr; }
-      .header .user-email { display: none; }
+      .top-bar h2 { font-size: 24px; }
     }
   </style>
 </head>
@@ -261,126 +88,142 @@
 
 <header class="header">
   <h1>💰 Vaquinha Online</h1>
-  <div class="user-box">
-    <span id="user-email" class="user-email" title=""></span>
-    <button onclick="sair()" aria-label="Sair da conta">Sair</button>
+  <div class="user-area">
+    <span class="user-email" id="user-email"></span>
+    <button class="btn-logout" onclick="logout()">Sair</button>
   </div>
 </header>
 
-<main class="container">
+<div class="container">
+  <div id="erro-box" class="erro-box"></div>
+  
   <div class="top-bar">
-    <h2>Vaquinhas ativas</h2>
-    <a href="create.html" class="btn-main">
-      <span>+</span> Criar nova vaquinha
-    </a>
+    <h2>Minhas Vaquinhas</h2>
+    <button class="btn-main" onclick="irParaCriar()">+ Criar nova vaquinha</button>
   </div>
-  <div id="lista-vaquinhas" class="grid" aria-live="polite" aria-busy="true">
-    <!-- Skeleton loading -->
-    <div class="skeleton-card skeleton"><div class="skeleton-line skeleton-title"></div><div class="skeleton-line skeleton-text"></div><div class="skeleton-line skeleton-text" style="width: 80%"></div><div class="skeleton-line skeleton-bar"></div></div>
-    <div class="skeleton-card skeleton"><div class="skeleton-line skeleton-title"></div><div class="skeleton-line skeleton-text"></div><div class="skeleton-line skeleton-text" style="width: 80%"></div><div class="skeleton-line skeleton-bar"></div></div>
-    <div class="skeleton-card skeleton"><div class="skeleton-line skeleton-title"></div><div class="skeleton-line skeleton-text"></div><div class="skeleton-line skeleton-text" style="width: 80%"></div><div class="skeleton-line skeleton-bar"></div></div>
+
+  <div class="grid" id="lista-vaquinhas">
+    <div class="loading">Carregando suas vaquinhas...</div>
   </div>
-</main>
+</div>
 
 <script type="module">
 import { supabase } from './supabase.js'
 
-// Sanitiza HTML pra evitar XSS
-function escapeHtml(text) {
-  const div = document.createElement('div')
-  div.textContent = text
-  return div.innerHTML
+const erroBox = document.getElementById('erro-box')
+const lista = document.getElementById('lista-vaquinhas')
+
+function mostrarErro(msg) {
+  erroBox.textContent = msg
+  erroBox.style.display = 'block'
+  console.error('[ERRO]', msg)
 }
 
-function formatarMoeda(valor) {
-  return Number(valor || 0).toLocaleString('pt-BR', {
-    style: 'currency',
-    currency: 'BRL'
-  })
+// Função de navegação com debug
+window.irParaCriar = function() {
+  console.log('[DEBUG] Clicou em Criar nova vaquinha')
+  console.log('[DEBUG] Redirecionando para: create.html')
+  window.location.href = 'create.html'
 }
 
-function formatarData(data) {
-  return new Date(data).toLocaleDateString('pt-BR', {
-    day: '2-digit',
-    month: 'short',
-    year: 'numeric'
-  })
-}
-
-// Checa auth
-const { data: { user } } = await supabase.auth.getUser()
-if (!user) {
-  window.location.href = 'index.html'
-} else {
-  document.getElementById('user-email').textContent = user.email
-  document.getElementById('user-email').title = user.email
-  carregarVaquinhas()
-}
-
-window.sair = async function() {
+// Logout
+window.logout = async function() {
+  console.log('[DEBUG] Fazendo logout')
   await supabase.auth.signOut()
   window.location.href = 'index.html'
 }
 
-async function carregarVaquinhas() {
-  const lista = document.getElementById('lista-vaquinhas')
-  
+// Função pra copiar link
+window.copiarLink = function(id) {
+  const url = `${window.location.origin}/vaquinha.html?id=${id}`
+  navigator.clipboard.writeText(url)
+  alert('Link copiado!')
+}
+
+// Carrega dados ao iniciar
+async function init() {
   try {
-    const { data, error } = await supabase
-      .from('campaigns')
-      .select('*')
-      .eq('status', 'active') // Só mostra ativas
-      .order('created_at', { ascending: false })
-      .limit(50) // Evita carregar 1000 cards de uma vez
-
-    lista.setAttribute('aria-busy', 'false')
-
-    if (error) throw error
-
-    if (!data || data.length === 0) {
-      lista.innerHTML = `<div class="alert">Nenhuma vaquinha criada ainda. Seja o primeiro!</div>`
+    console.log('[DEBUG] Iniciando dashboard...')
+    
+    // Checa autenticação
+    const { data: { user }, error: authError } = await supabase.auth.getUser()
+    
+    if (authError) {
+      console.error('[DEBUG] Erro de auth:', authError)
+      throw authError
+    }
+    
+    if (!user) {
+      console.log('[DEBUG] Usuário não logado, redirecionando...')
+      window.location.href = 'index.html'
       return
     }
 
-    // Usa DocumentFragment pra performance
-    const fragment = document.createDocumentFragment()
-    
-    data.forEach(v => {
-      const porcentagem = v.goal > 0 ? Math.min((v.current_amount / v.goal) * 100, 100) : 0
-      const link = document.createElement('a')
-      link.href = `vaquinha.html?id=${v.id}`
-      link.className = 'card-link'
-      link.setAttribute('aria-label', `Ver vaquinha: ${escapeHtml(v.title)}`)
-      
-      link.innerHTML = `
-        <article class="card">
-          <div class="card-header">
-            <h3>${escapeHtml(v.title)}</h3>
-            <time class="card-date" datetime="${v.created_at}">${formatarData(v.created_at)}</time>
-          </div>
-          <p>${escapeHtml(v.description || 'Sem descrição')}</p>
-          <div class="progress-bar" role="progressbar" aria-valuenow="${porcentagem.toFixed(0)}" aria-valuemin="0" aria-valuemax="100">
-            <div class="progress" style="width: ${porcentagem}%"></div>
-          </div>
-          <div class="values">
-            <span><b>${formatarMoeda(v.current_amount)}</b> arrecadados</span>
-            <span>Meta: ${formatarMoeda(v.goal)}</span>
-          </div>
-          <div class="values-percentage">${porcentagem.toFixed(1)}% concluído</div>
-        </article>
-      `
-      fragment.appendChild(link)
-    })
-    
-    lista.innerHTML = ''
-    lista.appendChild(fragment)
+    console.log('[DEBUG] Usuário logado:', user.email)
+    document.getElementById('user-email').textContent = user.email
 
-  } catch (error) {
-    console.error('Erro ao carregar vaquinhas:', error)
-    lista.setAttribute('aria-busy', 'false')
-    lista.innerHTML = `<div class="alert alert-error">Erro ao carregar vaquinhas. Tente recarregar a página.</div>`
+    // Busca vaquinhas
+    console.log('[DEBUG] Buscando vaquinhas...')
+    const { data: vaquinhas, error } = await supabase
+      .from('campaigns')
+      .select('*')
+      .eq('user_id', user.id)
+      .order('created_at', { ascending: false })
+
+    if (error) {
+      console.error('[DEBUG] Erro ao buscar vaquinhas:', error)
+      throw error
+    }
+
+    console.log('[DEBUG] Vaquinhas encontradas:', vaquinhas?.length || 0)
+
+    // Renderiza
+    if (!vaquinhas || vaquinhas.length === 0) {
+      lista.innerHTML = `
+        <div class="empty-state">
+          <h3>Você ainda não criou nenhuma vaquinha</h3>
+          <p>Clique no botão acima para começar</p>
+        </div>
+      `
+    } else {
+      lista.innerHTML = vaquinhas.map(v => {
+        const pct = v.goal > 0 ? Math.min((v.current_amount / v.goal) * 100, 100) : 0
+        const statusClass = v.status === 'active' ? 'active' : 'closed'
+        const statusText = v.status === 'active' ? 'Ativa' : 'Encerrada'
+        
+        return `
+          <div class="card">
+            <div class="card-header">
+              <h3>${v.title}</h3>
+              <span class="status ${statusClass}">${statusText}</span>
+            </div>
+            <p class="descricao">${v.description || 'Sem descrição'}</p>
+            <div class="progress-bar">
+              <div class="progress" style="width: ${pct}%"></div>
+            </div>
+            <div class="values">
+              <span><b>${Number(v.current_amount).toLocaleString('pt-BR', {style:'currency',currency:'BRL'})}</b> arrecadados</span>
+              <span>Meta: <b>${Number(v.goal).toLocaleString('pt-BR', {style:'currency',currency:'BRL'})}</b></span>
+            </div>
+            <div class="card-actions">
+              <a href="vaquinha.html?id=${v.id}">Ver página</a>
+              <a href="editar-vaquinha.html?id=${v.id}" class="primary">Editar</a>
+            </div>
+          </div>
+        `
+      }).join('')
+    }
+
+    console.log('[DEBUG] Dashboard carregado com sucesso')
+
+  } catch (err) {
+    mostrarErro('Erro ao carregar dashboard: ' + err.message)
+    lista.innerHTML = `<div class="loading" style="color: #ff5252;">Erro ao carregar. Veja mensagem acima.</div>`
   }
 }
+
+// Inicia quando a página carregar
+init()
 </script>
 
 </body>
