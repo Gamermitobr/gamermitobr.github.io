@@ -5,25 +5,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashboard - Vaquinha Online</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      background-color: #0a0a0a;
-      color: #f1f1f1;
-      font-family: 'Inter', Arial, sans-serif;
-    }
+    body { background-color: #0a0a0a; color: #f1f1f1; font-family: 'Inter', sans-serif; }
     .header {
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 20px 5%; background: #0f0f0f; border-bottom: 1px solid #1a1a1a;
+      display: flex; justify-content: space-between; align-items: center; padding: 20px 5%;
+      background: #0f0f0f; border-bottom: 1px solid #1a1a1a; position: sticky; top: 0;
     }
     .header h1 { font-size: 20px; font-weight: 700; }
-    .header .user-box { display: flex; gap: 12px; align-items: center; }
+    .header .user-box { display: flex; gap: 12px; align-items: center; font-size: 14px; }
     .header button {
       background: #2a2a2a; border: 1px solid #3a3a3a; color: #f1f1f1;
       padding: 8px 16px; border-radius: 8px; cursor: pointer;
     }
-    .container { max-width: 1000px; margin: 0 auto; padding: 40px 20px; }
+    .container { max-width: 1100px; margin: 0 auto; padding: 40px 20px; }
     .top-bar {
       display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;
     }
@@ -33,7 +28,7 @@
       border-radius: 10px; font-weight: 600;
     }
     .grid {
-      display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px;
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px;
     }
     .card {
       background: #121212; border: 1px solid #1f1f1f; border-radius: 16px; padding: 20px;
@@ -41,8 +36,9 @@
     .card h3 { font-size: 18px; margin-bottom: 8px; }
     .card p { color: #9e9e9e; font-size: 14px; margin-bottom: 16px; height: 40px; overflow: hidden; }
     .progress-bar { background: #2a2a2a; height: 8px; border-radius: 4px; margin-bottom: 8px; }
-    .progress { background: #00c853; height: 100%; border-radius: 4px; }
+    .progress { background: #00c853; height: 100%; border-radius: 4px; transition: width 0.5s; }
     .values { display: flex; justify-content: space-between; font-size: 14px; }
+    .values b { color: #fff; }
     .alert { text-align: center; padding: 40px; color: #616161; }
   </style>
 </head>
@@ -61,14 +57,12 @@
     <h2>Vaquinhas ativas</h2>
     <a href="create.html" class="btn-main">+ Criar nova vaquinha</a>
   </div>
-
   <div id="lista-vaquinhas" class="grid"></div>
 </div>
 
 <script type="module">
 import { supabase } from './supabase.js'
 
-// 1. Checa se tá logado. Se não, volta pra home
 const { data: { user } } = await supabase.auth.getUser()
 if (!user) {
   window.location.href = 'index.html'
@@ -77,13 +71,11 @@ if (!user) {
   carregarVaquinhas()
 }
 
-// 2. Função de sair
 window.sair = async function() {
   await supabase.auth.signOut()
   window.location.href = 'index.html'
 }
 
-// 3. Carrega todas as vaquinhas
 async function carregarVaquinhas() {
   const { data, error } = await supabase
     .from('campaigns')
@@ -99,16 +91,14 @@ async function carregarVaquinhas() {
 
   lista.innerHTML = ''
   data.forEach(v => {
-    const porcentagem = v.goal > 0 ? (v.current_amount / v.goal) * 100 : 0
+    const porcentagem = v.goal > 0 ? Math.min((v.current_amount / v.goal) * 100, 100) : 0
     lista.innerHTML += `
       <div class="card">
         <h3>${v.title}</h3>
         <p>${v.description || 'Sem descrição'}</p>
-        <div class="progress-bar">
-          <div class="progress" style="width: ${porcentagem}%"></div>
-        </div>
+        <div class="progress-bar"><div class="progress" style="width: ${porcentagem}%"></div></div>
         <div class="values">
-          <span>R$ ${v.current_amount || 0}</span>
+          <span><b>R$ ${v.current_amount || 0}</b> arrecadados</span>
           <span>Meta: R$ ${v.goal}</span>
         </div>
       </div>
