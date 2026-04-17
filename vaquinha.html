@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <!-- Meta tags pra prévia no WhatsApp/Instagram/Facebook -->
   <title id="meta-title">Vaquinha Online</title>
   <meta name="description" id="meta-desc" content="Contribua com essa vaquinha">
   <meta property="og:type" content="website">
@@ -197,48 +196,50 @@ if (!id) {
   throw new Error('ID não informado')
 }
 
-// Busca dados da vaquinha
 const { data: v, error } = await supabase
   .from('campaigns')
   .select('*')
   .eq('id', id)
   .single()
 
-if (error || !v) {
+if (error) {
+  console.error('Erro Supabase:', error)
+  mostrarErro('Erro ao carregar: ' + error.message)
+  throw error
+}
+if (!v) {
   mostrarErro('Vaquinha não encontrada ou foi removida.')
   throw new Error('Não encontrada')
 }
 
 const pix = v.metadata || {}
-const pct = v.goal > 0 ? Math.min((v.current_amount / v.goal) * 100, 100) : 0
+const metaValor = Number(v.goal) || 0
+const valorAtual = Number(v.current_amount) || 0
+const pct = metaValor > 0 ? Math.min((valorAtual / metaValor) * 100, 100) : 0
 const urlCompleta = window.location.href
 
-// Atualiza meta tags pro WhatsApp
 document.getElementById('meta-title').textContent = v.title + ' - Vaquinha Online'
-document.getElementById('meta-desc').setAttribute('content', `Meta: ${Number(v.goal).toLocaleString('pt-BR', {style:'currency',currency:'BRL'})} | ${pct.toFixed(0)}% arrecadado. Ajude!`)
+document.getElementById('meta-desc').setAttribute('content', `Meta: ${metaValor.toLocaleString('pt-BR', {style:'currency',currency:'BRL'})} | ${pct.toFixed(0)}% arrecadado. Ajude!`)
 document.getElementById('og-title').setAttribute('content', v.title)
-document.getElementById('og-desc').setAttribute('content', v.description || `Meta de ${Number(v.goal).toLocaleString('pt-BR', {style:'currency',currency:'BRL'})}. Contribua!`)
+document.getElementById('og-desc').setAttribute('content', v.description || `Meta de ${metaValor.toLocaleString('pt-BR', {style:'currency',currency:'BRL'})}. Contribua!`)
 document.querySelector('meta[property="og:url"]').setAttribute('content', urlCompleta)
 
-// Preenche dados na tela
 document.title = v.title + ' - Vaquinha Online'
 document.getElementById('titulo-vaquinha').textContent = v.title
 document.getElementById('descricao-vaquinha').textContent = v.description || 'Toda ajuda é bem-vinda!'
-document.getElementById('valor-arrecadado').textContent = Number(v.current_amount).toLocaleString('pt-BR', {style:'currency',currency:'BRL'})
-document.getElementById('valor-meta').textContent = Number(v.goal).toLocaleString('pt-BR', {style:'currency',currency:'BRL'})
+document.getElementById('valor-arrecadado').textContent = valorAtual.toLocaleString('pt-BR', {style:'currency',currency:'BRL'})
+document.getElementById('valor-meta').textContent = metaValor.toLocaleString('pt-BR', {style:'currency',currency:'BRL'})
 document.getElementById('barra-progresso').style.width = pct + '%'
 document.getElementById('barra-progresso').parentElement.setAttribute('aria-valuenow', pct.toFixed(0))
 document.getElementById('porcentagem').textContent = pct.toFixed(1) + '% da meta atingida'
 document.getElementById('nome-beneficiario').textContent = pix.beneficiary_name || 'o criador'
 document.getElementById('nome-aviso').textContent = pix.beneficiary_name || 'o criador'
 
-// Mostra/esconde área do Pix
 if (!pix.pix_key) {
   document.getElementById('pix-configurado').style.display = 'none'
   document.getElementById('pix-nao-configurado').style.display = 'block'
 }
 
-// Mostra botão editar se for o dono
 const { data: { user } } = await supabase.auth.getUser()
 if (user && user.id === v.user_id) {
   document.getElementById('btn-editar-container').innerHTML = `
@@ -251,7 +252,6 @@ if (user && user.id === v.user_id) {
 document.getElementById('loading').style.display = 'none'
 document.getElementById('conteudo').style.display = 'block'
 
-// Gerar QR Code
 window.gerarQrCode = async function() {
   const valor = parseFloat(document.getElementById('valor-doacao').value)
   if (!valor || valor <= 0) return alert('Digite um valor válido maior que zero')
@@ -290,7 +290,7 @@ window.copiarPix = function() {
 }
 
 window.compartilharWhatsApp = function() {
-  const texto = `💚 ${v.title}\n\n${v.description || ''}\n\nMeta: ${Number(v.goal).toLocaleString('pt-BR', {style:'currency',currency:'BRL'})}\nArrecadado: ${pct.toFixed(0)}%\n\nDoe aqui: ${urlCompleta}`
+  const texto = `💚 ${v.title}\n\n${v.description || ''}\n\nMeta: ${metaValor.toLocaleString('pt-BR', {style:'currency',currency:'BRL'})}\nArrecadado: ${pct.toFixed(0)}%\n\nDoe aqui: ${urlCompleta}`
   window.open(`https://wa.me/?text=${encodeURIComponent(texto)}`, '_blank')
 }
 
